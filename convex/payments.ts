@@ -8,7 +8,7 @@ let stripe: Stripe | null = null;
 
 if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2024-06-20", // Use a valid API version
+    apiVersion: "2025-08-27.basil", // Use the required API version
   });
 } else {
   console.error("STRIPE_SECRET_KEY environment variable is not set");
