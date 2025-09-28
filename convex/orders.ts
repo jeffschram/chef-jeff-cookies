@@ -33,17 +33,7 @@ export const createOrder = mutation({
       orderDate,
     });
 
-    // Send confirmation emails
-    await ctx.scheduler.runAfter(0, internal.orders.sendOrderEmails, {
-      orderId,
-      customerName: args.customerName,
-      customerEmail: args.customerEmail,
-      totalAmount: args.totalAmount,
-      items: args.items,
-      deliveryType: args.deliveryType,
-      deliveryAddress: args.deliveryAddress,
-    });
-
+    // Don't send confirmation emails yet - wait for payment confirmation
     return orderId;
   },
 });
@@ -187,5 +177,14 @@ export const getOrders = query({
   args: {},
   handler: async (ctx) => {
     return await ctx.db.query("orders").order("desc").collect();
+  },
+});
+
+export const getOrderById = query({
+  args: {
+    orderId: v.id("orders"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.orderId);
   },
 });

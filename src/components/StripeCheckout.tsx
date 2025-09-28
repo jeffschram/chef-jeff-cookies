@@ -77,6 +77,7 @@ function CheckoutForm({ orderId, amount, customerEmail, customerName, onSuccess 
   const [success, setSuccess] = useState(false);
 
   const createPaymentIntent = useAction(api.payments.createPaymentIntent);
+  const confirmPayment = useAction(api.payments.confirmPayment);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +96,7 @@ function CheckoutForm({ orderId, amount, customerEmail, customerName, onSuccess 
 
     try {
       // Create payment intent on the backend
-      const { clientSecret } = await createPaymentIntent({
+      const { clientSecret, paymentIntentId } = await createPaymentIntent({
         amount,
         customerEmail,
         customerName,
@@ -116,6 +117,12 @@ function CheckoutForm({ orderId, amount, customerEmail, customerName, onSuccess 
       if (stripeError) {
         setError(stripeError.message || 'Payment failed. Please try again.');
       } else if (paymentIntent?.status === 'succeeded') {
+        // Confirm payment on backend to trigger order update and email
+        await confirmPayment({
+          paymentIntentId: paymentIntentId,
+          orderId: orderId,
+        });
+
         setSuccess(true);
         setTimeout(() => {
           onSuccess();
