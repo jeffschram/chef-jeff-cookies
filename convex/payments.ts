@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import Stripe from "stripe";
 
+// Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-08-27.basil",
 });
@@ -44,18 +45,20 @@ export const confirmPayment = action({
   },
   handler: async (ctx, args) => {
     try {
-      const paymentIntent = await stripe.paymentIntents.retrieve(args.paymentIntentId);
-      
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        args.paymentIntentId
+      );
+
       if (paymentIntent.status === "succeeded") {
         // Update order status to confirmed
         await ctx.runMutation(internal.orders.updateOrderStatusInternal, {
           orderId: args.orderId,
           status: "confirmed",
         });
-        
+
         return { success: true, status: paymentIntent.status };
       }
-      
+
       return { success: false, status: paymentIntent.status };
     } catch (error) {
       console.error("Error confirming payment:", error);
