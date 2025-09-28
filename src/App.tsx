@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useMutation } from 'convex/react';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
-import StripeCheckout from './components/StripeCheckout';
-import CookieGallery from './components/CookieGallery';
-import CookieImage from './components/CookieImage';
-import AdminDashboard from './components/AdminDashboard';
-import './global.css';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
+import { Id } from "../convex/_generated/dataModel";
+import StripeCheckout from "./components/StripeCheckout";
+import CookieGallery from "./components/CookieGallery";
+import CookieImage from "./components/CookieImage";
+import AdminDashboard from "./components/AdminDashboard";
+import "./global.css";
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -133,7 +133,9 @@ const ProductCard = styled.div`
   padding: 2rem;
   box-shadow: var(--shadow);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -201,7 +203,7 @@ const ViewCartLink = styled.button`
   text-decoration: underline;
   font-size: 0.9rem;
   margin-top: 0.5rem;
-  
+
   &:hover {
     color: var(--secondary-color);
   }
@@ -372,7 +374,9 @@ const RadioOption = styled.label`
   border: 2px solid #ddd;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 
   &:hover {
     border-color: var(--accent-color);
@@ -443,7 +447,7 @@ const products = [
     description: "Perfect for a quick treat",
     price: 15,
     quantity: 3,
-    packageType: 'nibbler' as const,
+    packageType: "nibbler" as const,
   },
   {
     id: 2,
@@ -451,7 +455,7 @@ const products = [
     description: "Great for sharing with loved ones",
     price: 27,
     quantity: 6,
-    packageType: 'family' as const,
+    packageType: "family" as const,
   },
   {
     id: 3,
@@ -459,7 +463,7 @@ const products = [
     description: "For serious cookie enthusiasts",
     price: 50,
     quantity: 12,
-    packageType: 'pro' as const,
+    packageType: "pro" as const,
   },
 ];
 
@@ -468,52 +472,54 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
-  packageType?: 'nibbler' | 'family' | 'pro';
+  packageType?: "nibbler" | "family" | "pro";
 }
 
 interface OrderForm {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  deliveryType: 'pickup' | 'delivery';
+  deliveryType: "pickup" | "delivery";
   deliveryAddress: string;
 }
 
-type CheckoutStep = 'cart' | 'details' | 'payment' | 'success';
-type AppView = 'store' | 'admin';
+type CheckoutStep = "cart" | "details" | "payment" | "success";
+type AppView = "store" | "admin";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<AppView>('store');
+  const [currentView, setCurrentView] = useState<AppView>("store");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('cart');
-  const [currentOrderId, setCurrentOrderId] = useState<Id<"orders"> | null>(null);
+  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("cart");
+  const [currentOrderId, setCurrentOrderId] = useState<Id<"orders"> | null>(
+    null
+  );
   const [orderForm, setOrderForm] = useState<OrderForm>({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    deliveryType: 'pickup',
-    deliveryAddress: '',
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    deliveryType: "pickup",
+    deliveryAddress: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addingToCart, setAddingToCart] = useState<number | null>(null);
 
   const createOrder = useMutation(api.orders.createOrder);
 
-  if (currentView === 'admin') {
+  if (currentView === "admin") {
     return <AdminDashboard />;
   }
 
-  const addToCart = async (product: typeof products[0]) => {
+  const addToCart = async (product: (typeof products)[0]) => {
     setAddingToCart(product.id);
-    
+
     // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
       if (existingItem) {
-        return prevCart.map(item =>
+        return prevCart.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -521,16 +527,16 @@ export default function App() {
       }
       return [...prevCart, { ...product, quantity: 1 }];
     });
-    
+
     setAddingToCart(null);
   };
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity === 0) {
-      setCart(prevCart => prevCart.filter(item => item.id !== id));
+      setCart((prevCart) => prevCart.filter((item) => item.id !== id));
     } else {
-      setCart(prevCart =>
-        prevCart.map(item =>
+      setCart((prevCart) =>
+        prevCart.map((item) =>
           item.id === id ? { ...item, quantity: newQuantity } : item
         )
       );
@@ -542,13 +548,16 @@ export default function App() {
   };
 
   const getItemQuantityInCart = (productId: number) => {
-    const item = cart.find(item => item.id === productId);
+    const item = cart.find((item) => item.id === productId);
     return item ? item.quantity : 0;
   };
 
   const getTotalPrice = () => {
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const deliveryFee = orderForm.deliveryType === 'delivery' ? 10 : 0;
+    const subtotal = cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    const deliveryFee = orderForm.deliveryType === "delivery" ? 10 : 0;
     return subtotal + deliveryFee;
   };
 
@@ -562,49 +571,52 @@ export default function App() {
         customerName: orderForm.customerName,
         customerEmail: orderForm.customerEmail,
         customerPhone: orderForm.customerPhone,
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           name: item.name,
           price: item.price,
           quantity: item.quantity,
         })),
         deliveryType: orderForm.deliveryType,
-        deliveryAddress: orderForm.deliveryType === 'delivery' ? orderForm.deliveryAddress : undefined,
+        deliveryAddress:
+          orderForm.deliveryType === "delivery"
+            ? orderForm.deliveryAddress
+            : undefined,
         totalAmount: getTotalPrice(),
       });
-      
+
       setCurrentOrderId(orderId);
-      setCheckoutStep('payment');
+      setCheckoutStep("payment");
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error("Error creating order:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handlePaymentSuccess = () => {
-    setCheckoutStep('success');
+    setCheckoutStep("success");
     setCart([]);
     setOrderForm({
-      customerName: '',
-      customerEmail: '',
-      customerPhone: '',
-      deliveryType: 'pickup',
-      deliveryAddress: '',
+      customerName: "",
+      customerEmail: "",
+      customerPhone: "",
+      deliveryType: "pickup",
+      deliveryAddress: "",
     });
   };
 
   const closeModal = () => {
     setIsCartOpen(false);
-    setCheckoutStep('cart');
+    setCheckoutStep("cart");
     setCurrentOrderId(null);
   };
 
   const goBackToCart = () => {
-    setCheckoutStep('cart');
+    setCheckoutStep("cart");
   };
 
   const goBackToDetails = () => {
-    setCheckoutStep('details');
+    setCheckoutStep("details");
   };
 
   return (
@@ -612,16 +624,21 @@ export default function App() {
       <Header>
         <div className="container">
           <HeaderContent>
-            <Logo onClick={() => setCurrentView('store')} style={{ cursor: 'pointer' }}>
+            <Logo
+              onClick={() => setCurrentView("store")}
+              style={{ cursor: "pointer" }}
+            >
               Chef Jeff Cookies
             </Logo>
             <HeaderButtons>
-              <AdminButton onClick={() => setCurrentView('admin')}>
+              <AdminButton onClick={() => setCurrentView("admin")}>
                 Admin
               </AdminButton>
               <CartButton onClick={() => setIsCartOpen(true)}>
-                {getTotalItems() > 0 ? `Cart - $${getTotalPrice()}` : 'Cart'}
-                {getTotalItems() > 0 && <CartBadge>{getTotalItems()}</CartBadge>}
+                {getTotalItems() > 0 ? `Cart - $${getTotalPrice()}` : "Cart"}
+                {getTotalItems() > 0 && (
+                  <CartBadge>{getTotalItems()}</CartBadge>
+                )}
               </CartButton>
             </HeaderButtons>
           </HeaderContent>
@@ -631,9 +648,11 @@ export default function App() {
       <Hero>
         <div className="container">
           <HeroTitle>Freshly Baked Every Wednesday</HeroTitle>
-          <HeroSubtitle>Handcrafted cookies made with love and the finest ingredients</HeroSubtitle>
+          <HeroSubtitle>
+            Handcrafted cookies made with love and the finest ingredients
+          </HeroSubtitle>
           <Schedule>
-            <strong>Baked: Wednesdays | Pickup: Saturdays</strong>
+            <strong>Baked: Fridays | Pickup: Saturdays</strong>
           </Schedule>
         </div>
       </Hero>
@@ -642,22 +661,28 @@ export default function App() {
         <div className="container">
           <SectionTitle>Our Cookie Packages</SectionTitle>
           <ProductGrid>
-            {products.map(product => {
+            {products.map((product) => {
               const quantityInCart = getItemQuantityInCart(product.id);
               const isAdding = addingToCart === product.id;
-              
+
               return (
                 <ProductCard key={product.id}>
                   <CookieGallery packageType={product.packageType} />
                   <ProductName>{product.name}</ProductName>
                   <ProductDescription>{product.description}</ProductDescription>
-                  <ProductDescription>{product.quantity} cookies</ProductDescription>
+                  <ProductDescription>
+                    {product.quantity} cookies
+                  </ProductDescription>
                   <ProductPrice>${product.price}</ProductPrice>
-                  <AddToCartButton 
+                  <AddToCartButton
                     onClick={() => addToCart(product)}
                     disabled={isAdding}
                   >
-                    {isAdding ? 'Adding...' : quantityInCart > 0 ? 'Add Another' : 'Add to Cart'}
+                    {isAdding
+                      ? "Adding..."
+                      : quantityInCart > 0
+                        ? "Add Another"
+                        : "Add to Cart"}
                     {quantityInCart > 0 && !isAdding && (
                       <ProductBadge>{quantityInCart}</ProductBadge>
                     )}
@@ -673,13 +698,14 @@ export default function App() {
               );
             })}
           </ProductGrid>
-          
+
           <DeliveryInfo>
-            <h4 style={{ color: 'var(--primary-color)', marginBottom: '1rem' }}>
+            <h4 style={{ color: "var(--primary-color)", marginBottom: "1rem" }}>
               Delivery Information
             </h4>
             <p>
-              <strong>Pickup:</strong> Free on Saturdays<br/>
+              <strong>Pickup:</strong> Free on Saturdays
+              <br />
               <strong>Local Delivery:</strong> Additional $10 fee
             </p>
           </DeliveryInfo>
@@ -691,30 +717,38 @@ export default function App() {
           <ModalContent>
             <ModalHeader>
               <ModalTitle>
-                {checkoutStep === 'cart' && 'Your Cart'}
-                {checkoutStep === 'details' && 'Customer Information'}
-                {checkoutStep === 'payment' && 'Payment'}
-                {checkoutStep === 'success' && 'Order Complete'}
+                {checkoutStep === "cart" && "Your Cart"}
+                {checkoutStep === "details" && "Customer Information"}
+                {checkoutStep === "payment" && "Payment"}
+                {checkoutStep === "success" && "Order Complete"}
               </ModalTitle>
               <CloseButton onClick={closeModal}>×</CloseButton>
             </ModalHeader>
 
-            {checkoutStep === 'success' ? (
-              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                <h4 style={{ color: 'var(--primary-color)', marginBottom: '1rem' }}>
+            {checkoutStep === "success" ? (
+              <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                <h4
+                  style={{
+                    color: "var(--primary-color)",
+                    marginBottom: "1rem",
+                  }}
+                >
                   🎉 Order Confirmed!
                 </h4>
-                <p>Thank you for your order! We'll contact you soon with pickup/delivery details.</p>
+                <p>
+                  Thank you for your order! We'll contact you soon with
+                  pickup/delivery details.
+                </p>
               </div>
-            ) : checkoutStep === 'payment' && currentOrderId ? (
+            ) : checkoutStep === "payment" && currentOrderId ? (
               <div>
-                <button 
+                <button
                   onClick={goBackToDetails}
-                  style={{ 
-                    background: 'none', 
-                    color: 'var(--primary-color)', 
-                    marginBottom: '1rem',
-                    textDecoration: 'underline'
+                  style={{
+                    background: "none",
+                    color: "var(--primary-color)",
+                    marginBottom: "1rem",
+                    textDecoration: "underline",
                   }}
                 >
                   ← Back to details
@@ -727,20 +761,20 @@ export default function App() {
                   onSuccess={handlePaymentSuccess}
                 />
               </div>
-            ) : checkoutStep === 'details' ? (
+            ) : checkoutStep === "details" ? (
               <div>
-                <button 
+                <button
                   onClick={goBackToCart}
-                  style={{ 
-                    background: 'none', 
-                    color: 'var(--primary-color)', 
-                    marginBottom: '1rem',
-                    textDecoration: 'underline'
+                  style={{
+                    background: "none",
+                    color: "var(--primary-color)",
+                    marginBottom: "1rem",
+                    textDecoration: "underline",
                   }}
                 >
                   ← Back to cart
                 </button>
-                
+
                 <Form onSubmit={handleSubmitOrder}>
                   <FormGroup>
                     <Label>Name *</Label>
@@ -748,7 +782,12 @@ export default function App() {
                       type="text"
                       required
                       value={orderForm.customerName}
-                      onChange={(e) => setOrderForm(prev => ({ ...prev, customerName: e.target.value }))}
+                      onChange={(e) =>
+                        setOrderForm((prev) => ({
+                          ...prev,
+                          customerName: e.target.value,
+                        }))
+                      }
                     />
                   </FormGroup>
 
@@ -758,7 +797,12 @@ export default function App() {
                       type="email"
                       required
                       value={orderForm.customerEmail}
-                      onChange={(e) => setOrderForm(prev => ({ ...prev, customerEmail: e.target.value }))}
+                      onChange={(e) =>
+                        setOrderForm((prev) => ({
+                          ...prev,
+                          customerEmail: e.target.value,
+                        }))
+                      }
                     />
                   </FormGroup>
 
@@ -768,37 +812,65 @@ export default function App() {
                       type="tel"
                       required
                       value={orderForm.customerPhone}
-                      onChange={(e) => setOrderForm(prev => ({ ...prev, customerPhone: e.target.value }))}
+                      onChange={(e) =>
+                        setOrderForm((prev) => ({
+                          ...prev,
+                          customerPhone: e.target.value,
+                        }))
+                      }
                     />
                   </FormGroup>
 
-                  <div style={{ 
-                    backgroundColor: 'var(--background-light)', 
-                    padding: '1rem', 
-                    borderRadius: 'var(--border-radius)',
-                    marginTop: '1rem'
-                  }}>
-                    <h4 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>
+                  <div
+                    style={{
+                      backgroundColor: "var(--background-light)",
+                      padding: "1rem",
+                      borderRadius: "var(--border-radius)",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <h4
+                      style={{
+                        color: "var(--primary-color)",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
                       Order Summary
                     </h4>
                     <SummaryRow>
                       <span>Subtotal:</span>
-                      <span>${cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
+                      <span>
+                        $
+                        {cart
+                          .reduce(
+                            (total, item) => total + item.price * item.quantity,
+                            0
+                          )
+                          .toFixed(2)}
+                      </span>
                     </SummaryRow>
-                    {orderForm.deliveryType === 'delivery' && (
+                    {orderForm.deliveryType === "delivery" && (
                       <SummaryRow>
                         <span>Delivery Fee:</span>
                         <span>$10.00</span>
                       </SummaryRow>
                     )}
-                    <SummaryRow style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>
+                    <SummaryRow
+                      style={{
+                        fontWeight: "bold",
+                        color: "var(--primary-color)",
+                      }}
+                    >
                       <span>Total:</span>
                       <span>${getTotalPrice().toFixed(2)}</span>
                     </SummaryRow>
                   </div>
 
-                  <SubmitButton type="submit" disabled={isSubmitting || cart.length === 0}>
-                    {isSubmitting ? 'Creating Order...' : 'Proceed to Payment'}
+                  <SubmitButton
+                    type="submit"
+                    disabled={isSubmitting || cart.length === 0}
+                  >
+                    {isSubmitting ? "Creating Order..." : "Proceed to Payment"}
                   </SubmitButton>
                 </Form>
               </div>
@@ -808,11 +880,11 @@ export default function App() {
                   <EmptyCart>Your cart is empty</EmptyCart>
                 ) : (
                   <>
-                    {cart.map(item => (
+                    {cart.map((item) => (
                       <CartItem key={item.id}>
                         <CartItemImage>
-                          <CookieImage 
-                            packageType={item.packageType || 'nibbler'}
+                          <CookieImage
+                            packageType={item.packageType || "nibbler"}
                             variant={0}
                             size={50}
                           />
@@ -820,17 +892,23 @@ export default function App() {
                         <CartItemInfo>
                           <CartItemName>{item.name}</CartItemName>
                           <CartItemPrice>${item.price} each</CartItemPrice>
-                          <CartItemSubtotal>${(item.price * item.quantity).toFixed(2)}</CartItemSubtotal>
+                          <CartItemSubtotal>
+                            ${(item.price * item.quantity).toFixed(2)}
+                          </CartItemSubtotal>
                         </CartItemInfo>
                         <QuantityControls>
                           <QuantityButton
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                           >
                             -
                           </QuantityButton>
                           <span>{item.quantity}</span>
                           <QuantityButton
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                           >
                             +
                           </QuantityButton>
@@ -847,8 +925,13 @@ export default function App() {
                               type="radio"
                               name="deliveryType"
                               value="pickup"
-                              checked={orderForm.deliveryType === 'pickup'}
-                              onChange={() => setOrderForm(prev => ({ ...prev, deliveryType: 'pickup' }))}
+                              checked={orderForm.deliveryType === "pickup"}
+                              onChange={() =>
+                                setOrderForm((prev) => ({
+                                  ...prev,
+                                  deliveryType: "pickup",
+                                }))
+                              }
                             />
                             <RadioLabel>Pickup (Free)</RadioLabel>
                           </RadioOption>
@@ -857,31 +940,50 @@ export default function App() {
                               type="radio"
                               name="deliveryType"
                               value="delivery"
-                              checked={orderForm.deliveryType === 'delivery'}
-                              onChange={() => setOrderForm(prev => ({ ...prev, deliveryType: 'delivery' }))}
+                              checked={orderForm.deliveryType === "delivery"}
+                              onChange={() =>
+                                setOrderForm((prev) => ({
+                                  ...prev,
+                                  deliveryType: "delivery",
+                                }))
+                              }
                             />
                             <RadioLabel>Local Delivery (+$10)</RadioLabel>
                           </RadioOption>
                         </RadioGroup>
                       </FormGroup>
 
-                      {orderForm.deliveryType === 'delivery' && (
+                      {orderForm.deliveryType === "delivery" && (
                         <FormGroup>
                           <Label>Delivery Address *</Label>
                           <TextArea
                             required
                             value={orderForm.deliveryAddress}
-                            onChange={(e) => setOrderForm(prev => ({ ...prev, deliveryAddress: e.target.value }))}
+                            onChange={(e) =>
+                              setOrderForm((prev) => ({
+                                ...prev,
+                                deliveryAddress: e.target.value,
+                              }))
+                            }
                             placeholder="Enter your full delivery address"
                           />
                         </FormGroup>
                       )}
 
-                      {orderForm.deliveryType === 'delivery' ? (
+                      {orderForm.deliveryType === "delivery" ? (
                         <>
                           <SummaryRow>
                             <span>Subtotal:</span>
-                            <span>${cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
+                            <span>
+                              $
+                              {cart
+                                .reduce(
+                                  (total, item) =>
+                                    total + item.price * item.quantity,
+                                  0
+                                )
+                                .toFixed(2)}
+                            </span>
                           </SummaryRow>
                           <SummaryRow>
                             <span>Delivery Fee:</span>
@@ -900,8 +1002,8 @@ export default function App() {
                       )}
                     </CartSummary>
 
-                    <SubmitButton 
-                      onClick={() => setCheckoutStep('details')} 
+                    <SubmitButton
+                      onClick={() => setCheckoutStep("details")}
                       disabled={cart.length === 0}
                     >
                       Continue to Checkout

@@ -1,4 +1,9 @@
-import { mutation, query, internalMutation, internalAction } from "./_generated/server";
+import {
+  mutation,
+  query,
+  internalMutation,
+  internalAction,
+} from "./_generated/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { Resend } from "resend";
@@ -8,18 +13,20 @@ export const createOrder = mutation({
     customerName: v.string(),
     customerEmail: v.string(),
     customerPhone: v.string(),
-    items: v.array(v.object({
-      name: v.string(),
-      price: v.number(),
-      quantity: v.number(),
-    })),
+    items: v.array(
+      v.object({
+        name: v.string(),
+        price: v.number(),
+        quantity: v.number(),
+      })
+    ),
     deliveryType: v.union(v.literal("pickup"), v.literal("delivery")),
     deliveryAddress: v.optional(v.string()),
     totalAmount: v.number(),
   },
   handler: async (ctx, args) => {
-    const orderDate = new Date().toISOString().split('T')[0];
-    
+    const orderDate = new Date().toISOString().split("T")[0];
+
     const orderId = await ctx.db.insert("orders", {
       ...args,
       status: "pending",
@@ -36,7 +43,7 @@ export const createOrder = mutation({
       deliveryType: args.deliveryType,
       deliveryAddress: args.deliveryAddress,
     });
-    
+
     return orderId;
   },
 });
@@ -47,25 +54,33 @@ export const sendOrderEmails = internalAction({
     customerName: v.string(),
     customerEmail: v.string(),
     totalAmount: v.number(),
-    items: v.array(v.object({
-      name: v.string(),
-      price: v.number(),
-      quantity: v.number(),
-    })),
+    items: v.array(
+      v.object({
+        name: v.string(),
+        price: v.number(),
+        quantity: v.number(),
+      })
+    ),
     deliveryType: v.union(v.literal("pickup"), v.literal("delivery")),
     deliveryAddress: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const resend = new Resend(process.env.RESEND_API_KEY || process.env.CONVEX_RESEND_API_KEY);
+    const resend = new Resend(
+      process.env.RESEND_API_KEY || process.env.CONVEX_RESEND_API_KEY
+    );
 
     // Create order summary HTML
-    const itemsList = args.items.map(item => 
-      `<li>${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}</li>`
-    ).join('');
+    const itemsList = args.items
+      .map(
+        (item) =>
+          `<li>${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}</li>`
+      )
+      .join("");
 
-    const deliveryInfo = args.deliveryType === 'delivery' 
-      ? `<p><strong>Delivery Address:</strong> ${args.deliveryAddress}</p>`
-      : '<p><strong>Pickup:</strong> Saturday pickup available</p>';
+    const deliveryInfo =
+      args.deliveryType === "delivery"
+        ? `<p><strong>Delivery Address:</strong> ${args.deliveryAddress}</p>`
+        : "<p><strong>Pickup:</strong> Saturday pickup available</p>";
 
     const emailHtml = `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -88,7 +103,7 @@ export const sendOrderEmails = internalAction({
         
         <div style="background-color: #F4A460; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #2C1810; margin-top: 0;">Important Information</h3>
-          <p><strong>Baking Schedule:</strong> Cookies are baked fresh every Wednesday</p>
+          <p><strong>Baking Schedule:</strong> Cookies are baked fresh every Friday</p>
           <p><strong>Pickup/Delivery:</strong> Available on Saturdays</p>
           <p>We'll contact you soon with specific pickup/delivery details!</p>
         </div>
@@ -103,8 +118,8 @@ export const sendOrderEmails = internalAction({
     `;
 
     try {
-      console.log('Attempting to send email to:', args.customerEmail);
-      
+      console.log("Attempting to send email to:", args.customerEmail);
+
       const { data, error } = await resend.emails.send({
         from: "Chef Jeff Cookies <orders@chefcookies.com>",
         to: args.customerEmail,
@@ -113,17 +128,19 @@ export const sendOrderEmails = internalAction({
       });
 
       if (error) {
-        console.error('Resend API error:', JSON.stringify(error, null, 2));
-        console.error('Note: Convex Resend proxy only sends to your verified Chef email');
+        console.error("Resend API error:", JSON.stringify(error, null, 2));
+        console.error(
+          "Note: Convex Resend proxy only sends to your verified Chef email"
+        );
         throw new Error(`Failed to send email: ${JSON.stringify(error)}`);
       }
 
-      console.log('Email sent successfully:', data);
+      console.log("Email sent successfully:", data);
       return data;
     } catch (error) {
-      console.error('Email error:', error);
-      console.error('Recipient:', args.customerEmail);
-      console.error('Use the same email you used to sign into Chef');
+      console.error("Email error:", error);
+      console.error("Recipient:", args.customerEmail);
+      console.error("Use the same email you used to sign into Chef");
       throw error;
     }
   },
@@ -132,7 +149,11 @@ export const sendOrderEmails = internalAction({
 export const updateOrderStatus = mutation({
   args: {
     orderId: v.id("orders"),
-    status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("completed")),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("completed")
+    ),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.orderId, {
@@ -144,7 +165,11 @@ export const updateOrderStatus = mutation({
 export const updateOrderStatusInternal = internalMutation({
   args: {
     orderId: v.id("orders"),
-    status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("completed")),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("completed")
+    ),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.orderId, {
