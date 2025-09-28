@@ -31,6 +31,7 @@ export const createOrder = mutation({
     const orderId = await ctx.db.insert("orders", {
       ...args,
       status: "pending",
+      fulfillmentStatus: "pending",
       orderDate,
     });
 
@@ -158,6 +159,20 @@ export const updateOrderStatus = mutation({
   },
 });
 
+export const updateFulfillmentStatus = mutation({
+  args: {
+    orderId: v.id("orders"),
+    fulfillmentStatus: v.union(v.literal("pending"), v.literal("fulfilled")),
+  },
+  handler: async (ctx, args) => {
+    console.log("Updating fulfillment status for order:", args.orderId, "to:", args.fulfillmentStatus);
+    await ctx.db.patch(args.orderId, {
+      fulfillmentStatus: args.fulfillmentStatus,
+    });
+    console.log("Fulfillment status updated successfully");
+  },
+});
+
 export const updateOrderStatusInternal = internalMutation({
   args: {
     orderId: v.id("orders"),
@@ -177,7 +192,11 @@ export const updateOrderStatusInternal = internalMutation({
 export const getOrders = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("orders").order("desc").collect();
+    return await ctx.db
+      .query("orders")
+      .filter((q) => q.eq(q.field("status"), "completed"))
+      .order("desc")
+      .collect();
   },
 });
 

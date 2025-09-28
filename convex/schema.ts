@@ -16,6 +16,7 @@ const applicationTables = {
     deliveryAddress: v.optional(v.string()),
     totalAmount: v.number(),
     status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("completed")),
+    fulfillmentStatus: v.optional(v.union(v.literal("pending"), v.literal("fulfilled"))),
     orderDate: v.string(),
   }),
 };
