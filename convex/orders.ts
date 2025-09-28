@@ -3,6 +3,7 @@ import {
   query,
   internalMutation,
   internalAction,
+  internalQuery,
 } from "./_generated/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
@@ -181,6 +182,15 @@ export const getOrders = query({
 });
 
 export const getOrderById = query({
+  args: {
+    orderId: v.id("orders"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.orderId);
+  },
+});
+
+export const getOrderByIdInternal = internalQuery({
   args: {
     orderId: v.id("orders"),
   },
