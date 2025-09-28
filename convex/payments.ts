@@ -92,7 +92,7 @@ export const confirmPayment = action({
         });
 
         // Get order details to send confirmation email
-        const order = await ctx.runQuery(internal.orders.getOrderById, {
+        const order = await ctx.runQuery(internal.orders.getOrderByIdInternal, {
           orderId: args.orderId,
         });
 
