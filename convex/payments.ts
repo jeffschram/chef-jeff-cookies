@@ -91,6 +91,24 @@ export const confirmPayment = action({
           status: "confirmed",
         });
 
+        // Get order details to send confirmation email
+        const order = await ctx.runQuery(internal.orders.getOrderById, {
+          orderId: args.orderId,
+        });
+
+        if (order) {
+          // Send confirmation email now that payment is confirmed
+          await ctx.scheduler.runAfter(0, internal.orders.sendOrderEmails, {
+            orderId: args.orderId,
+            customerName: order.customerName,
+            customerEmail: order.customerEmail,
+            totalAmount: order.totalAmount,
+            items: order.items,
+            deliveryType: order.deliveryType,
+            deliveryAddress: order.deliveryAddress,
+          });
+        }
+
         console.log("Payment confirmed and order updated:", args.orderId);
         return { success: true, status: paymentIntent.status };
       }
