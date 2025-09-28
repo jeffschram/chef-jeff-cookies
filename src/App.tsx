@@ -647,7 +647,7 @@ export default function App() {
 
       <Hero>
         <div className="container">
-          <HeroTitle>Freshly Baked Every Wednesday</HeroTitle>
+          <HeroTitle>Freshly Baked Every Friday</HeroTitle>
           <HeroSubtitle>
             Handcrafted cookies made with love and the finest ingredients
           </HeroSubtitle>
