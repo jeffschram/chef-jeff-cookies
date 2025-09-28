@@ -252,6 +252,7 @@ export default function AdminDashboard() {
 
   const orders = useQuery(api.orders.getOrders);
   const updateOrderStatus = useMutation(api.orders.updateOrderStatus);
+  const updateFulfillmentStatus = useMutation(api.orders.updateFulfillmentStatus);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -264,11 +265,17 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleOrderCompletion = async (orderId: Id<"orders">, completed: boolean) => {
-    await updateOrderStatus({
-      orderId,
-      status: completed ? "completed" : "confirmed"
-    });
+  const handleFulfillmentChange = async (orderId: Id<"orders">, fulfilled: boolean) => {
+    console.log("Handling fulfillment change:", orderId, fulfilled);
+    try {
+      await updateFulfillmentStatus({
+        orderId,
+        fulfillmentStatus: fulfilled ? "fulfilled" : "pending"
+      });
+      console.log("Fulfillment status updated successfully");
+    } catch (error) {
+      console.error("Error updating fulfillment status:", error);
+    }
   };
 
   const getWeekStart = (date: Date) => {
@@ -465,9 +472,10 @@ export default function AdminDashboard() {
                       <TableHeader>
                         <tr>
                           <TableHeaderCell style={{ width: '25%' }}>Customer</TableHeaderCell>
-                          <TableHeaderCell style={{ width: '45%' }}>Order Details</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '35%' }}>Order Details</TableHeaderCell>
                           <TableHeaderCell style={{ width: '15%' }}>Total</TableHeaderCell>
-                          <TableHeaderCell style={{ width: '15%' }}>Status</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '12.5%' }}>Payment</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '12.5%' }}>Pickup</TableHeaderCell>
                         </tr>
                       </TableHeader>
                       <tbody>
@@ -501,11 +509,21 @@ export default function AdminDashboard() {
                               <TotalAmount>${order.totalAmount.toFixed(2)}</TotalAmount>
                             </TableCell>
                             <TableCell>
+                              <div style={{
+                                textAlign: 'center',
+                                color: '#22c55e',
+                                fontWeight: 'bold',
+                                fontSize: '0.9rem'
+                              }}>
+                                ✅ Paid
+                              </div>
+                            </TableCell>
+                            <TableCell>
                               <CompletionCheckbox>
                                 <Checkbox
                                   type="checkbox"
-                                  checked={order.status === 'completed'}
-                                  onChange={(e) => handleOrderCompletion(order._id, e.target.checked)}
+                                  checked={order.fulfillmentStatus === 'fulfilled'}
+                                  onChange={(e) => handleFulfillmentChange(order._id, e.target.checked)}
                                 />
                                 <label style={{ fontSize: '0.8rem' }}>Picked up</label>
                               </CompletionCheckbox>
@@ -549,9 +567,10 @@ export default function AdminDashboard() {
                       <TableHeader>
                         <tr>
                           <TableHeaderCell style={{ width: '25%' }}>Customer</TableHeaderCell>
-                          <TableHeaderCell style={{ width: '45%' }}>Order Details</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '35%' }}>Order Details</TableHeaderCell>
                           <TableHeaderCell style={{ width: '15%' }}>Total</TableHeaderCell>
-                          <TableHeaderCell style={{ width: '15%' }}>Status</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '12.5%' }}>Payment</TableHeaderCell>
+                          <TableHeaderCell style={{ width: '12.5%' }}>Delivery</TableHeaderCell>
                         </tr>
                       </TableHeader>
                       <tbody>
@@ -586,11 +605,21 @@ export default function AdminDashboard() {
                               <TotalAmount>${order.totalAmount.toFixed(2)}</TotalAmount>
                             </TableCell>
                             <TableCell>
+                              <div style={{
+                                textAlign: 'center',
+                                color: '#22c55e',
+                                fontWeight: 'bold',
+                                fontSize: '0.9rem'
+                              }}>
+                                ✅ Paid
+                              </div>
+                            </TableCell>
+                            <TableCell>
                               <CompletionCheckbox>
                                 <Checkbox
                                   type="checkbox"
-                                  checked={order.status === 'completed'}
-                                  onChange={(e) => handleOrderCompletion(order._id, e.target.checked)}
+                                  checked={order.fulfillmentStatus === 'fulfilled'}
+                                  onChange={(e) => handleFulfillmentChange(order._id, e.target.checked)}
                                 />
                                 <label style={{ fontSize: '0.8rem' }}>Delivered</label>
                               </CompletionCheckbox>

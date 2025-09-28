@@ -85,10 +85,10 @@ export const confirmPayment = action({
       );
 
       if (paymentIntent.status === "succeeded") {
-        // Update order status to confirmed
+        // Update order status to completed (payment = order completion)
         await ctx.runMutation(internal.orders.updateOrderStatusInternal, {
           orderId: args.orderId,
-          status: "confirmed",
+          status: "completed",
         });
 
         // Get order details to send confirmation email
