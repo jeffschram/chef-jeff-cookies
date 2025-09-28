@@ -65,9 +65,13 @@ export const sendOrderEmails = internalAction({
     deliveryAddress: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const resend = new Resend(
-      process.env.RESEND_API_KEY || process.env.CONVEX_RESEND_API_KEY
-    );
+    // Check if Resend API key is available
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY environment variable is not set");
+      throw new Error("Email service not configured");
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Create order summary HTML
     const itemsList = args.items
@@ -119,9 +123,14 @@ export const sendOrderEmails = internalAction({
 
     try {
       console.log("Attempting to send email to:", args.customerEmail);
+      console.log(
+        "Using API key:",
+        process.env.RESEND_API_KEY ? "Set" : "Not set"
+      );
 
       const { data, error } = await resend.emails.send({
-        from: "Chef Jeff Cookies <orders@chefcookies.com>",
+        // Use your verified domain email address as the sender
+        from: "Chef Jeff Cookies <schramindustries@gmail.com>", // Change this to match your verified domain
         to: args.customerEmail,
         subject: `Order Confirmation - Chef Jeff Cookies (#${args.orderId})`,
         html: emailHtml,
@@ -129,9 +138,6 @@ export const sendOrderEmails = internalAction({
 
       if (error) {
         console.error("Resend API error:", JSON.stringify(error, null, 2));
-        console.error(
-          "Note: Convex Resend proxy only sends to your verified Chef email"
-        );
         throw new Error(`Failed to send email: ${JSON.stringify(error)}`);
       }
 
@@ -140,7 +146,6 @@ export const sendOrderEmails = internalAction({
     } catch (error) {
       console.error("Email error:", error);
       console.error("Recipient:", args.customerEmail);
-      console.error("Use the same email you used to sign into Chef");
       throw error;
     }
   },
