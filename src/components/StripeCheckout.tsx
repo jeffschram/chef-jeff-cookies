@@ -62,19 +62,21 @@ const SuccessMessage = styled.div`
 `;
 
 interface StripeCheckoutProps {
-  orderId: Id<"orders">;
+  orderId?: Id<"orders"> | null;
   amount: number;
   customerEmail: string;
   customerName: string;
   onSuccess: () => void;
+  onCreateOrder?: () => Promise<Id<"orders"> | null>;
 }
 
-function CheckoutForm({ orderId, amount, customerEmail, customerName, onSuccess }: StripeCheckoutProps) {
+function CheckoutForm({ orderId: initialOrderId, amount, customerEmail, customerName, onSuccess, onCreateOrder }: StripeCheckoutProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<Id<"orders"> | null>(initialOrderId || null);
 
   const createPaymentIntent = useAction(api.payments.createPaymentIntent);
   const confirmPayment = useAction(api.payments.confirmPayment);
@@ -95,6 +97,24 @@ function CheckoutForm({ orderId, amount, customerEmail, customerName, onSuccess 
     setError(null);
 
     try {
+      // If no order exists yet, create it first
+      let orderId = currentOrderId;
+      if (!orderId && onCreateOrder) {
+        orderId = await onCreateOrder();
+        if (!orderId) {
+          setError('Failed to create order. Please try again.');
+          setIsProcessing(false);
+          return;
+        }
+        setCurrentOrderId(orderId);
+      }
+
+      if (!orderId) {
+        setError('Order ID is missing. Please try again.');
+        setIsProcessing(false);
+        return;
+      }
+
       // Create payment intent on the backend
       const { clientSecret, paymentIntentId } = await createPaymentIntent({
         amount,

@@ -18,13 +18,13 @@ const ThumbnailGrid = styled.div`
   flex-wrap: wrap;
 `;
 
-const Thumbnail = styled.button<{ isActive: boolean }>`
-  border: 3px solid ${props => props.isActive ? 'var(--primary-color)' : 'transparent'};
+const Thumbnail = styled.button<{ $isActive: boolean }>`
+  border: 3px solid ${props => props.$isActive ? 'var(--primary-color)' : 'transparent'};
   border-radius: 50%;
   padding: 2px;
   background: none;
   transition: border-color 0.3s ease;
-  
+
   &:hover {
     border-color: var(--accent-color);
   }
@@ -51,10 +51,10 @@ export default function CookieGallery({ packageType }: CookieGalleryProps) {
         {[0, 1, 2, 3, 4].map((variant) => (
           <Thumbnail
             key={variant}
-            isActive={selectedVariant === variant}
+            $isActive={selectedVariant === variant}
             onClick={() => setSelectedVariant(variant)}
           >
-            <CookieImage 
+            <CookieImage
               packageType={packageType}
               variant={variant}
               size={40}

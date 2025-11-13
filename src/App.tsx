@@ -7,6 +7,7 @@ import StripeCheckout from "./components/StripeCheckout";
 import CookieGallery from "./components/CookieGallery";
 import CookieImage from "./components/CookieImage";
 import AdminDashboard from "./components/AdminDashboard";
+import AddressAutocomplete from "./components/AddressAutocomplete";
 import "./global.css";
 
 const AppContainer = styled.div`
@@ -101,12 +102,58 @@ const HeroSubtitle = styled.p`
   margin-bottom: 2rem;
 `;
 
-const Schedule = styled.div`
-  background-color: var(--accent-color);
-  padding: 1rem 2rem;
-  border-radius: var(--border-radius-lg);
-  display: inline-block;
-  margin-bottom: 2rem;
+const Schedule = styled.ul`
+  font-size: 1rem;
+  width: max-content;
+  margin-inline: auto;
+  display: grid;
+  gap: 0.5rem;
+  @media (min-width: 1024px) {
+    width: auto;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+  }
+`;
+const ScheduleItem = styled.li`
+  text-align: left;
+  display: flex;
+  gap: 1rem;
+  opacity: 0.8;
+  padding: 0.5rem 1rem;
+  &.today {
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+    opacity: 1;
+  }
+  &.orders {
+    background-color: #22a91d;
+    outline-color: #22a91d;
+    color: white;
+  }
+  &.baking {
+    background-color: #a9411d;
+    outline-color: #a9411d;
+    color: white;
+  }
+  &.pickup {
+    background-color: #a91da4;
+    outline-color: #a91da4;
+    color: white;
+  }
+  @media (min-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+`;
+const ScheduleItemDay = styled.span`
+  font-weight: bold;
+`;
+const ScheduleItemDescription = styled.span`
+  @media (min-width: 850px) {
+    text-align: center;
+    display: block;
+  }
 `;
 
 const ProductsSection = styled.section`
@@ -440,6 +487,20 @@ const EmptyCart = styled.p`
   margin: 2rem 0;
 `;
 
+const WarningMessage = styled.div`
+  background-color: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #856404;
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+`;
+
 const products = [
   {
     id: 1,
@@ -503,8 +564,31 @@ export default function App() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addingToCart, setAddingToCart] = useState<number | null>(null);
+  const [isAddressInRange, setIsAddressInRange] = useState<boolean | null>(
+    null
+  );
 
   const createOrder = useMutation(api.orders.createOrder);
+
+  // Get current day of week (0 = Sunday, 1 = Monday, etc.)
+  const getCurrentDay = () => {
+    return new Date().getDay();
+  };
+
+  // Helper function to check if a day string matches today
+  const isToday = (dayName: string) => {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const currentDayIndex = getCurrentDay();
+    return days[currentDayIndex] === dayName;
+  };
 
   if (currentView === "admin") {
     return <AdminDashboard />;
@@ -561,9 +645,8 @@ export default function App() {
     return subtotal + deliveryFee;
   };
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (cart.length === 0) return;
+  const handleCreateOrder = async () => {
+    if (cart.length === 0) return null;
 
     setIsSubmitting(true);
     try {
@@ -585,9 +668,10 @@ export default function App() {
       });
 
       setCurrentOrderId(orderId);
-      setCheckoutStep("payment");
+      return orderId;
     } catch (error) {
       console.error("Error creating order:", error);
+      return null;
     } finally {
       setIsSubmitting(false);
     }
@@ -647,13 +731,56 @@ export default function App() {
 
       <Hero>
         <div className="container">
-          <HeroTitle>Freshly Baked Every Friday</HeroTitle>
+          <HeroTitle>Fresh Baked Cookies Every Week</HeroTitle>
           <HeroSubtitle>
             Handcrafted cookies made with love and the finest ingredients
           </HeroSubtitle>
-          <Schedule>
-            <strong>Baked: Fridays | Pickup: Saturdays</strong>
-          </Schedule>
+          {/* <Schedule>
+            <ScheduleItem
+              className={`orders delivery${isToday("Sunday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Sunday</ScheduleItemDay>
+              <ScheduleItemDescription>
+                Open&nbsp;for&nbsp;Orders &amp;&nbsp;Delivery
+              </ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`orders${isToday("Monday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Monday</ScheduleItemDay>
+              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`orders${isToday("Tuesday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Tuesday</ScheduleItemDay>
+              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`orders${isToday("Wednesday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Wednesday</ScheduleItemDay>
+              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`baking${isToday("Thursday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Thursday</ScheduleItemDay>
+              <ScheduleItemDescription>Baking</ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`baking${isToday("Friday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Friday</ScheduleItemDay>
+              <ScheduleItemDescription>Baking</ScheduleItemDescription>
+            </ScheduleItem>
+            <ScheduleItem
+              className={`pickup${isToday("Saturday") ? " today" : ""}`}
+            >
+              <ScheduleItemDay>Saturday</ScheduleItemDay>
+              <ScheduleItemDescription>Pickup</ScheduleItemDescription>
+            </ScheduleItem>
+          </Schedule> */}
         </div>
       </Hero>
 
@@ -718,8 +845,7 @@ export default function App() {
             <ModalHeader>
               <ModalTitle>
                 {checkoutStep === "cart" && "Your Cart"}
-                {checkoutStep === "details" && "Customer Information"}
-                {checkoutStep === "payment" && "Payment"}
+                {checkoutStep === "details" && "Checkout"}
                 {checkoutStep === "success" && "Order Complete"}
               </ModalTitle>
               <CloseButton onClick={closeModal}>×</CloseButton>
@@ -740,27 +866,6 @@ export default function App() {
                   pickup/delivery details.
                 </p>
               </div>
-            ) : checkoutStep === "payment" && currentOrderId ? (
-              <div>
-                <button
-                  onClick={goBackToDetails}
-                  style={{
-                    background: "none",
-                    color: "var(--primary-color)",
-                    marginBottom: "1rem",
-                    textDecoration: "underline",
-                  }}
-                >
-                  ← Back to details
-                </button>
-                <StripeCheckout
-                  orderId={currentOrderId}
-                  amount={getTotalPrice()}
-                  customerEmail={orderForm.customerEmail}
-                  customerName={orderForm.customerName}
-                  onSuccess={handlePaymentSuccess}
-                />
-              </div>
             ) : checkoutStep === "details" ? (
               <div>
                 <button
@@ -775,104 +880,103 @@ export default function App() {
                   ← Back to cart
                 </button>
 
-                <Form onSubmit={handleSubmitOrder}>
-                  <FormGroup>
-                    <Label>Name *</Label>
-                    <Input
-                      type="text"
-                      required
-                      value={orderForm.customerName}
-                      onChange={(e) =>
-                        setOrderForm((prev) => ({
-                          ...prev,
-                          customerName: e.target.value,
-                        }))
-                      }
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label>Email *</Label>
-                    <Input
-                      type="email"
-                      required
-                      value={orderForm.customerEmail}
-                      onChange={(e) =>
-                        setOrderForm((prev) => ({
-                          ...prev,
-                          customerEmail: e.target.value,
-                        }))
-                      }
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label>Phone *</Label>
-                    <Input
-                      type="tel"
-                      required
-                      value={orderForm.customerPhone}
-                      onChange={(e) =>
-                        setOrderForm((prev) => ({
-                          ...prev,
-                          customerPhone: e.target.value,
-                        }))
-                      }
-                    />
-                  </FormGroup>
-
-                  <div
+                <div
+                  style={{
+                    backgroundColor: "var(--background-light)",
+                    padding: "1rem",
+                    borderRadius: "var(--border-radius)",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  <h4
                     style={{
-                      backgroundColor: "var(--background-light)",
-                      padding: "1rem",
-                      borderRadius: "var(--border-radius)",
-                      marginTop: "1rem",
+                      color: "var(--primary-color)",
+                      marginBottom: "0.5rem",
                     }}
                   >
-                    <h4
-                      style={{
-                        color: "var(--primary-color)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      Order Summary
-                    </h4>
+                    Order Summary
+                  </h4>
+                  <SummaryRow>
+                    <span>Subtotal:</span>
+                    <span>
+                      $
+                      {cart
+                        .reduce(
+                          (total, item) => total + item.price * item.quantity,
+                          0
+                        )
+                        .toFixed(2)}
+                    </span>
+                  </SummaryRow>
+                  {orderForm.deliveryType === "delivery" && (
                     <SummaryRow>
-                      <span>Subtotal:</span>
-                      <span>
-                        $
-                        {cart
-                          .reduce(
-                            (total, item) => total + item.price * item.quantity,
-                            0
-                          )
-                          .toFixed(2)}
-                      </span>
+                      <span>Delivery Fee:</span>
+                      <span>$10.00</span>
                     </SummaryRow>
-                    {orderForm.deliveryType === "delivery" && (
-                      <SummaryRow>
-                        <span>Delivery Fee:</span>
-                        <span>$10.00</span>
-                      </SummaryRow>
-                    )}
-                    <SummaryRow
-                      style={{
-                        fontWeight: "bold",
-                        color: "var(--primary-color)",
-                      }}
-                    >
-                      <span>Total:</span>
-                      <span>${getTotalPrice().toFixed(2)}</span>
-                    </SummaryRow>
-                  </div>
-
-                  <SubmitButton
-                    type="submit"
-                    disabled={isSubmitting || cart.length === 0}
+                  )}
+                  <SummaryRow
+                    style={{
+                      fontWeight: "bold",
+                      color: "var(--primary-color)",
+                    }}
                   >
-                    {isSubmitting ? "Creating Order..." : "Proceed to Payment"}
-                  </SubmitButton>
-                </Form>
+                    <span>Total:</span>
+                    <span>${getTotalPrice().toFixed(2)}</span>
+                  </SummaryRow>
+                </div>
+
+                <FormGroup>
+                  <Label>Name *</Label>
+                  <Input
+                    type="text"
+                    required
+                    value={orderForm.customerName}
+                    onChange={(e) =>
+                      setOrderForm((prev) => ({
+                        ...prev,
+                        customerName: e.target.value,
+                      }))
+                    }
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label>Email *</Label>
+                  <Input
+                    type="email"
+                    required
+                    value={orderForm.customerEmail}
+                    onChange={(e) =>
+                      setOrderForm((prev) => ({
+                        ...prev,
+                        customerEmail: e.target.value,
+                      }))
+                    }
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label>Phone *</Label>
+                  <Input
+                    type="tel"
+                    required
+                    value={orderForm.customerPhone}
+                    onChange={(e) =>
+                      setOrderForm((prev) => ({
+                        ...prev,
+                        customerPhone: e.target.value,
+                      }))
+                    }
+                  />
+                </FormGroup>
+
+                <StripeCheckout
+                  amount={getTotalPrice()}
+                  customerEmail={orderForm.customerEmail}
+                  customerName={orderForm.customerName}
+                  onSuccess={handlePaymentSuccess}
+                  onCreateOrder={handleCreateOrder}
+                />
               </div>
             ) : (
               <>
@@ -955,16 +1059,19 @@ export default function App() {
 
                       {orderForm.deliveryType === "delivery" && (
                         <FormGroup>
-                          <Label>Delivery Address *</Label>
-                          <TextArea
+                          <Label style={{ marginTop: "1rem" }}>
+                            Delivery Address *
+                          </Label>
+                          <AddressAutocomplete
                             required
                             value={orderForm.deliveryAddress}
-                            onChange={(e) =>
+                            onChange={(value) =>
                               setOrderForm((prev) => ({
                                 ...prev,
-                                deliveryAddress: e.target.value,
+                                deliveryAddress: value,
                               }))
                             }
+                            onDeliveryStatusChange={setIsAddressInRange}
                             placeholder="Enter your full delivery address"
                           />
                         </FormGroup>
@@ -1004,7 +1111,11 @@ export default function App() {
 
                     <SubmitButton
                       onClick={() => setCheckoutStep("details")}
-                      disabled={cart.length === 0}
+                      disabled={
+                        cart.length === 0 ||
+                        (orderForm.deliveryType === "delivery" &&
+                          isAddressInRange === false)
+                      }
                     >
                       Continue to Checkout
                     </SubmitButton>
