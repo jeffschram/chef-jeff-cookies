@@ -9,7 +9,7 @@ const Input = styled.input`
   font-size: 1rem;
 
   &:focus {
-    border-color: var(--primary-color);
+    border-color: var(--text-1);
   }
 `;
 
@@ -19,7 +19,7 @@ const SuggestionsList = styled.ul`
   left: 0;
   right: 0;
   background-color: white;
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--text-1);
   border-top: none;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   max-height: 200px;
@@ -42,7 +42,7 @@ const SuggestionItem = styled.li`
   }
 
   &:hover {
-    background-color: var(--background-light);
+    background-color: var(--surface-1);
   }
 `;
 

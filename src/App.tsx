@@ -8,18 +8,17 @@ import CookieGallery from "./components/CookieGallery";
 import CookieImage from "./components/CookieImage";
 import AdminDashboard from "./components/AdminDashboard";
 import AddressAutocomplete from "./components/AddressAutocomplete";
+import Logo from "./components/Logo";
+import { ShoppingCart } from "lucide-react";
 import "./global.css";
 
 const AppContainer = styled.div`
   min-height: 100vh;
-  background-color: var(--background-light);
+  background-color: var(--surface-1);
 `;
 
 const Header = styled.header`
-  background-color: var(--primary-color);
-  color: var(--text-light);
-  padding: 1rem 0;
-  box-shadow: var(--shadow);
+  padding: 3rem 0;
 `;
 
 const HeaderContent = styled.div`
@@ -28,9 +27,14 @@ const HeaderContent = styled.div`
   align-items: center;
 `;
 
-const Logo = styled.h1`
-  font-size: 2.5rem;
-  font-weight: bold;
+const LogoContainer = styled.div`
+  width: 100%;
+  max-width: 16rem;
+  rotate: -4.76deg;
+  svg {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 const HeaderButtons = styled.div`
@@ -40,32 +44,21 @@ const HeaderButtons = styled.div`
 `;
 
 const CartButton = styled.button`
-  background-color: var(--secondary-color);
-  color: var(--text-light);
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius);
   font-size: 1rem;
-  font-weight: bold;
   transition: background-color 0.3s ease;
   position: relative;
-
-  &:hover {
-    background-color: var(--accent-color);
-  }
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const AdminButton = styled.button`
-  background-color: var(--accent-color);
-  color: var(--text-dark);
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius);
   font-size: 1rem;
-  font-weight: bold;
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #e6c068;
-  }
 `;
 
 const CartBadge = styled.span`
@@ -85,15 +78,24 @@ const CartBadge = styled.span`
 `;
 
 const Hero = styled.section`
-  text-align: center;
-  padding: 4rem 0;
-  background-color: var(--background-white);
+  padding: 0 0 4rem 0;
 `;
 
+const HeroContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 2rem;
+`;
+
+const HeroMain = styled.div``;
+const HeroMedia = styled.div``;
+
 const HeroTitle = styled.h2`
+  rotate: -4.76deg;
   font-size: 3rem;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
+  color: var(--text-1);
+  margin-bottom: 1.5rem;
 `;
 
 const HeroSubtitle = styled.p`
@@ -163,7 +165,7 @@ const ProductsSection = styled.section`
 const SectionTitle = styled.h3`
   font-size: 2.5rem;
   text-align: center;
-  color: var(--primary-color);
+  color: var(--text-1);
   margin-bottom: 3rem;
 `;
 
@@ -175,7 +177,7 @@ const ProductGrid = styled.div`
 `;
 
 const ProductCard = styled.div`
-  background-color: var(--background-white);
+  background-color: var(--surface-1);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
   box-shadow: var(--shadow);
@@ -192,7 +194,7 @@ const ProductCard = styled.div`
 
 const ProductName = styled.h4`
   font-size: 1.5rem;
-  color: var(--primary-color);
+  color: var(--text-1);
   margin-bottom: 0.5rem;
 `;
 
@@ -209,18 +211,12 @@ const ProductPrice = styled.p`
 `;
 
 const AddToCartButton = styled.button`
-  background-color: var(--primary-color);
-  color: var(--text-light);
   padding: 0.75rem 2rem;
   border-radius: var(--border-radius);
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
   position: relative;
-
-  &:hover:not(:disabled) {
-    background-color: var(--secondary-color);
-  }
 
   &:disabled {
     background-color: #ccc;
@@ -246,7 +242,7 @@ const ProductBadge = styled.span`
 
 const ViewCartLink = styled.button`
   background: none;
-  color: var(--primary-color);
+  color: var(--text-1);
   text-decoration: underline;
   font-size: 0.9rem;
   margin-top: 0.5rem;
@@ -257,7 +253,7 @@ const ViewCartLink = styled.button`
 `;
 
 const DeliveryInfo = styled.div`
-  background-color: var(--background-white);
+  background-color: var(--surface-1);
   padding: 2rem;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow);
@@ -278,13 +274,16 @@ const Modal = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: var(--background-white);
+  background-color: var(--surface-1);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
-  max-width: 500px;
-  width: 90%;
+  width: 100%;
   max-height: 90vh;
   overflow-y: auto;
+  @media (min-width: 1024px) {
+    width: 98%;
+    max-width: 1200px;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -296,7 +295,7 @@ const ModalHeader = styled.div`
 
 const ModalTitle = styled.h3`
   font-size: 1.8rem;
-  color: var(--primary-color);
+  color: var(--text-1);
 `;
 
 const CloseButton = styled.button`
@@ -325,7 +324,7 @@ const CartItemInfo = styled.div`
 
 const CartItemName = styled.p`
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--text-1);
 `;
 
 const CartItemPrice = styled.p`
@@ -354,7 +353,6 @@ const QuantityButton = styled.button`
 `;
 
 const CartSummary = styled.div`
-  border-top: 2px solid #eee;
   padding-top: 1rem;
   margin: 1rem 0;
 `;
@@ -372,11 +370,10 @@ const GrandTotal = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  border-top: 2px solid var(--primary-color);
   margin-top: 1rem;
   font-size: 1.3rem;
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--text-1);
 `;
 
 const Form = styled.form`
@@ -403,7 +400,7 @@ const Input = styled.input`
   font-size: 1rem;
 
   &:focus {
-    border-color: var(--primary-color);
+    border-color: var(--text-1);
   }
 `;
 
@@ -414,8 +411,13 @@ const RadioGroup = styled.div`
 `;
 
 const RadioOption = styled.label`
-  display: flex;
-  align-items: center;
+  display: grid;
+  align-items: start;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "input label"
+    "input hint";
   gap: 0.75rem;
   padding: 0.75rem;
   border: 2px solid #ddd;
@@ -431,38 +433,34 @@ const RadioOption = styled.label`
   }
 
   &:has(input:checked) {
-    border-color: var(--primary-color);
-    background-color: var(--background-light);
+    border-color: var(--text-1);
+    background-color: var(--surface-1);
   }
 `;
 
 const RadioInput = styled.input`
-  margin: 0;
-  accent-color: var(--primary-color);
+  grid-area: input;
+  margin: 0.35rem 0 0 0;
+  accent-color: var(--text-1);
 `;
 
 const RadioLabel = styled.span`
-  font-weight: 500;
+  grid-area: label;
+  font-weight: 700;
   color: var(--text-dark);
   flex: 1;
 `;
-
-const TextArea = styled.textarea`
-  padding: 0.75rem;
-  border: 2px solid #ddd;
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  resize: vertical;
-  min-height: 80px;
-
-  &:focus {
-    border-color: var(--primary-color);
-  }
+const RadioHint = styled.p`
+  grid-area: hint;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+  opacity: 0.8;
 `;
 
 const SubmitButton = styled.button`
-  background-color: var(--primary-color);
-  color: var(--text-light);
+  background-color: var(--text-1);
+  color: var(--text-2);
   padding: 1rem 2rem;
   border-radius: var(--border-radius);
   font-size: 1.1rem;
@@ -500,29 +498,20 @@ const WarningMessage = styled.div`
     margin-bottom: 0.5rem;
   }
 `;
-
 const products = [
-  {
-    id: 1,
-    name: "The Nibbler",
-    description: "Perfect for a quick treat",
-    price: 0.5,
-    quantity: 3,
-    packageType: "nibbler" as const,
-  },
   {
     id: 2,
     name: "Family Pack",
     description: "Great for sharing with loved ones",
-    price: 0.51,
-    quantity: 6,
+    price: 25.0,
+    quantity: 5,
     packageType: "family" as const,
   },
   {
     id: 3,
-    name: "The Pro",
+    name: "Dozen",
     description: "For serious cookie enthusiasts",
-    price: 0.52,
+    price: 50.0,
     quantity: 12,
     packageType: "pro" as const,
   },
@@ -705,20 +694,21 @@ export default function App() {
 
   return (
     <AppContainer>
-      <Header>
+      <Header className="theme--a">
         <div className="container">
           <HeaderContent>
-            <Logo
+            <LogoContainer
               onClick={() => setCurrentView("store")}
               style={{ cursor: "pointer" }}
             >
-              Chef Jeff Cookies
-            </Logo>
+              <Logo />
+            </LogoContainer>
             <HeaderButtons>
               <AdminButton onClick={() => setCurrentView("admin")}>
                 Admin
               </AdminButton>
               <CartButton onClick={() => setIsCartOpen(true)}>
+                <ShoppingCart size={20} strokeWidth={2.5} />
                 {getTotalItems() > 0 ? `Cart - $${getTotalPrice()}` : "Cart"}
                 {getTotalItems() > 0 && (
                   <CartBadge>{getTotalItems()}</CartBadge>
@@ -729,12 +719,24 @@ export default function App() {
         </div>
       </Header>
 
-      <Hero>
-        <div className="container">
-          <HeroTitle>Fresh Baked Cookies Every Week</HeroTitle>
-          <HeroSubtitle>
-            Handcrafted cookies made with love and the finest ingredients
-          </HeroSubtitle>
+      <Hero className="theme--a decorative--bottom-angled">
+        <HeroContainer className="container">
+          <HeroMain>
+            <HeroTitle>
+              <span className="text--highlighted">
+                Meet Chef Jeff's World's Best Chocolate Chip Cookies
+              </span>
+            </HeroTitle>
+            {/* <HeroSubtitle>
+              <span className="text--highlighted">
+                Hand-made, small-batch, the best chocolate chip cookie you will
+                ever have.
+              </span>
+            </HeroSubtitle> */}
+          </HeroMain>
+          <HeroMedia>
+            <img src="/images/hero-cookie.png" alt="Chocolate Chip Cookie" />
+          </HeroMedia>
           {/* <Schedule>
             <ScheduleItem
               className={`orders delivery${isToday("Sunday") ? " today" : ""}`}
@@ -781,7 +783,7 @@ export default function App() {
               <ScheduleItemDescription>Pickup</ScheduleItemDescription>
             </ScheduleItem>
           </Schedule> */}
-        </div>
+        </HeroContainer>
       </Hero>
 
       <ProductsSection>
@@ -827,7 +829,7 @@ export default function App() {
           </ProductGrid>
 
           <DeliveryInfo>
-            <h4 style={{ color: "var(--primary-color)", marginBottom: "1rem" }}>
+            <h4 style={{ color: "var(--text-1)", marginBottom: "1rem" }}>
               Delivery Information
             </h4>
             <p>
@@ -841,7 +843,7 @@ export default function App() {
 
       {isCartOpen && (
         <Modal onClick={(e) => e.target === e.currentTarget && closeModal()}>
-          <ModalContent>
+          <ModalContent className="theme--b">
             <ModalHeader>
               <ModalTitle>
                 {checkoutStep === "cart" && "Your Cart"}
@@ -855,7 +857,7 @@ export default function App() {
               <div style={{ textAlign: "center", padding: "2rem 0" }}>
                 <h4
                   style={{
-                    color: "var(--primary-color)",
+                    color: "var(--text-1)",
                     marginBottom: "1rem",
                   }}
                 >
@@ -872,7 +874,7 @@ export default function App() {
                   onClick={goBackToCart}
                   style={{
                     background: "none",
-                    color: "var(--primary-color)",
+                    color: "var(--text-1)",
                     marginBottom: "1rem",
                     textDecoration: "underline",
                   }}
@@ -882,7 +884,7 @@ export default function App() {
 
                 <div
                   style={{
-                    backgroundColor: "var(--background-light)",
+                    backgroundColor: "var(--surface-1)",
                     padding: "1rem",
                     borderRadius: "var(--border-radius)",
                     marginBottom: "1.5rem",
@@ -890,7 +892,7 @@ export default function App() {
                 >
                   <h4
                     style={{
-                      color: "var(--primary-color)",
+                      color: "var(--text-1)",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -917,7 +919,7 @@ export default function App() {
                   <SummaryRow
                     style={{
                       fontWeight: "bold",
-                      color: "var(--primary-color)",
+                      color: "var(--text-1)",
                     }}
                   >
                     <span>Total:</span>
@@ -1038,7 +1040,19 @@ export default function App() {
                               }
                             />
                             <RadioLabel>Pickup (Free)</RadioLabel>
+                            <RadioHint>
+                              Saturdays from Noon - 4 PM in Stamford, CT
+                              <br /> at the Danger Gallery
+                              <br />
+                              <a
+                                href="https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D"
+                                target="_blank"
+                              >
+                                652 Glenbrook Rd #3, Stamford, CT 06906
+                              </a>
+                            </RadioHint>
                           </RadioOption>
+
                           <RadioOption>
                             <RadioInput
                               type="radio"
@@ -1053,13 +1067,17 @@ export default function App() {
                               }
                             />
                             <RadioLabel>Local Delivery (+$10)</RadioLabel>
+                            <RadioHint>
+                              Sunday Deliveries
+                              <br /> within 5 miles of Stamford, CT
+                            </RadioHint>
                           </RadioOption>
                         </RadioGroup>
                       </FormGroup>
 
                       {orderForm.deliveryType === "delivery" && (
                         <FormGroup>
-                          <Label style={{ marginTop: "1rem" }}>
+                          <Label style={{ marginTop: "2rem" }}>
                             Delivery Address *
                           </Label>
                           <AddressAutocomplete

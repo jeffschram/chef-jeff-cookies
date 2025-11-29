@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import CookieImage from './CookieImage';
+import React, { useState } from "react";
+import styled from "styled-components";
+import CookieImage from "./CookieImage";
 
 const GalleryContainer = styled.div`
   margin: 1rem 0;
@@ -19,7 +19,8 @@ const ThumbnailGrid = styled.div`
 `;
 
 const Thumbnail = styled.button<{ $isActive: boolean }>`
-  border: 3px solid ${props => props.$isActive ? 'var(--primary-color)' : 'transparent'};
+  border: 3px solid
+    ${(props) => (props.$isActive ? "var(--text-1)" : "transparent")};
   border-radius: 50%;
   padding: 2px;
   background: none;
@@ -31,7 +32,7 @@ const Thumbnail = styled.button<{ $isActive: boolean }>`
 `;
 
 interface CookieGalleryProps {
-  packageType: 'nibbler' | 'family' | 'pro';
+  packageType: "nibbler" | "family" | "pro";
 }
 
 export default function CookieGallery({ packageType }: CookieGalleryProps) {
@@ -40,13 +41,13 @@ export default function CookieGallery({ packageType }: CookieGalleryProps) {
   return (
     <GalleryContainer>
       <MainImage>
-        <CookieImage 
+        <CookieImage
           packageType={packageType}
           variant={selectedVariant}
           size={150}
         />
       </MainImage>
-      
+
       <ThumbnailGrid>
         {[0, 1, 2, 3, 4].map((variant) => (
           <Thumbnail

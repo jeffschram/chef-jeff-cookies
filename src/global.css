@@ -1,17 +1,88 @@
 :root {
-  --primary-color: #8B4513;
-  --secondary-color: #D2691E;
-  --accent-color: #F4A460;
-  --text-dark: #2C1810;
-  --text-light: #FFFFFF;
-  --background-light: #FFF8DC;
-  --background-white: #FFFFFF;
+  --c-black: #241b0b;
+  --c-white: #ffffff;
+  --c-yellow: #fbdd56;
+  /* --c-yellow: #fbdd56; */
+  --c-yellow-light: #fef1b5;
+
+  --a-surface-1: var(--c-yellow);
+  --a-surface-2: var(--c-white);
+  --a-text-1: var(--c-black);
+  --a-text-2: var(--c-yellow-light);
+
+  --b-surface-1: var(--c-white);
+  --b-surface-2: var(--c-yellow);
+  --b-text-1: var(--c-black);
+  --b-text-2: var(--c-yellow);
+
+  --c-surface-1: var(--c-black);
+  --c-surface-2: var(--c-yellow);
+  --c-text-1: var(--c-white);
+  --c-text-2: var(--c-yellow-light);
+
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
   --border-radius: 8px;
   --border-radius-lg: 12px;
-  --font-family: 'Georgia', 'Times New Roman', serif;
-  --font-family-sans: 'Arial', 'Helvetica', sans-serif;
+
+  --font-family-display: "BBH Sans Hegarty", sans-serif;
+  --font-family-sans: "Open Sans", sans-serif;
+
+  --rotate: -4.76deg;
+}
+
+.theme--a {
+  --surface-1: var(--a-surface-1);
+  --surface-2: var(--a-surface-2);
+  --text-1: var(--a-text-1);
+  --text-2: var(--a-text-2);
+  --button-bg: var(--a-surface-2);
+  --button-text: var(--a-text-1);
+}
+.theme--b {
+  --surface-1: var(--b-surface-1);
+  --surface-2: var(--b-surface-2);
+  --text-1: var(--b-text-1);
+  --text-2: var(--b-text-2);
+  --button-bg: var(--b-text-1);
+  --button-text: var(--b-surface-1);
+}
+.theme--c {
+  --surface-1: var(--c-surface-1);
+  --surface-2: var(--c-surface-2);
+  --text-1: var(--c-text-1);
+  --text-2: var(--c-text-2);
+  --button-bg: var(--c-text-1);
+  --button-text: var(--c-surface-1);
+}
+[class*="theme--"] {
+  background-color: var(--surface-1);
+  color: var(--text-1);
+}
+
+.decorative--bottom-angled {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,0 100,82 0,100" fill="white"/></svg>');
+  mask-size: 100% 100%;
+  padding-bottom: 10% !important;
+}
+
+*:has(.text--highlighted) {
+  line-height: 1.25; /* Ensure parent has normal line height */
+}
+p:has(.text--highlighted) {
+  line-height: 1.35; /* Ensure parent has normal line height */
+}
+
+.text--highlighted {
+  font: inherit;
+  color: var(--text-1);
+  background-color: var(--surface-2); /* Your highlight color */
+  padding: 0.25em 0.5em; /* Adjust padding as needed */
+  line-height: 0.2; /* Adjust for spacing between lines */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  display: inline;
 }
 
 * {
@@ -21,22 +92,37 @@
 }
 
 body {
-  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased; /* For WebKit-based browsers (Chrome, Safari) */
+  -moz-osx-font-smoothing: grayscale; /* For macOS Firefox */
+  font-smooth: antialiased; /* Standard property */
+  font-family: var(--font-family-sans);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
   color: var(--text-dark);
-  background-color: var(--background-light);
+  background-color: var(--surface-1);
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family);
-  font-weight: bold;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-display);
+  font-weight: normal;
 }
 
 button {
   cursor: pointer;
   border: none;
   outline: none;
-  font-family: var(--font-family-sans);
+  font-family: var(--font-family-display);
+  text-transform: uppercase;
+  background-color: var(--button-bg);
+  color: var(--button-text);
 }
 
 input {
