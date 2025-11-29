@@ -500,20 +500,12 @@ const WarningMessage = styled.div`
 `;
 const products = [
   {
-    id: 2,
-    name: "Family Pack",
-    description: "Great for sharing with loved ones",
-    price: 25.0,
-    quantity: 5,
-    packageType: "family" as const,
-  },
-  {
-    id: 3,
-    name: "Dozen",
-    description: "For serious cookie enthusiasts",
-    price: 50.0,
-    quantity: 12,
-    packageType: "pro" as const,
+    id: 1,
+    name: "Chocolate Chip Cookie",
+    description: "The best chocolate chip cookie you will ever have.",
+    price: 5.0,
+    quantity: 1,
+    packageType: "nibbler" as const,
   },
 ];
 
@@ -556,6 +548,7 @@ export default function App() {
   const [isAddressInRange, setIsAddressInRange] = useState<boolean | null>(
     null
   );
+  const [selectedQuantity, setSelectedQuantity] = useState(5);
 
   const createOrder = useMutation(api.orders.createOrder);
 
@@ -583,7 +576,7 @@ export default function App() {
     return <AdminDashboard />;
   }
 
-  const addToCart = async (product: (typeof products)[0]) => {
+  const addToCart = async (product: (typeof products)[0], quantity: number) => {
     setAddingToCart(product.id);
 
     // Simulate loading delay
@@ -594,11 +587,11 @@ export default function App() {
       if (existingItem) {
         return prevCart.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, { ...product, quantity: quantity }];
     });
 
     setAddingToCart(null);
@@ -690,6 +683,12 @@ export default function App() {
 
   const goBackToDetails = () => {
     setCheckoutStep("details");
+  };
+
+  const handleDirectCheckout = (product: (typeof products)[0], quantity: number) => {
+    setCart([{ ...product, quantity }]);
+    setCheckoutStep("cart");
+    setIsCartOpen(true);
   };
 
   return (
@@ -793,36 +792,43 @@ export default function App() {
             {products.map((product) => {
               const quantityInCart = getItemQuantityInCart(product.id);
               const isAdding = addingToCart === product.id;
+              const currentPrice = product.price * selectedQuantity;
 
               return (
-                <ProductCard key={product.id}>
+                <ProductCard key={product.id} style={{ maxWidth: "500px", margin: "0 auto" }}>
                   <CookieGallery packageType={product.packageType} />
                   <ProductName>{product.name}</ProductName>
                   <ProductDescription>{product.description}</ProductDescription>
-                  <ProductDescription>
-                    {product.quantity} cookies
-                  </ProductDescription>
-                  <ProductPrice>${product.price}</ProductPrice>
-                  <AddToCartButton
-                    onClick={() => addToCart(product)}
-                    disabled={isAdding}
+                  
+                  <div style={{ margin: "1.5rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+                    <Label htmlFor="quantity-select" style={{ marginBottom: 0 }}>Select Quantity:</Label>
+                    <select
+                      id="quantity-select"
+                      value={selectedQuantity}
+                      onChange={(e) => setSelectedQuantity(Number(e.target.value))}
+                      style={{
+                        padding: "0.5rem",
+                        fontSize: "1rem",
+                        borderRadius: "var(--border-radius)",
+                        border: "2px solid #ddd",
+                        width: "100%",
+                        maxWidth: "200px"
+                      }}
+                    >
+                      <option value={5}>5 Cookies ($25.00)</option>
+                      <option value={10}>10 Cookies ($50.00)</option>
+                      <option value={15}>15 Cookies ($75.00)</option>
+                      <option value={20}>20 Cookies ($100.00)</option>
+                      <option value={25}>25 Cookies ($125.00)</option>
+                    </select>
+                  </div>
+
+                  <SubmitButton
+                    onClick={() => handleDirectCheckout(product, selectedQuantity)}
+                    style={{ width: "100%", maxWidth: "300px", margin: "0 auto" }}
                   >
-                    {isAdding
-                      ? "Adding..."
-                      : quantityInCart > 0
-                        ? "Add Another"
-                        : "Add to Cart"}
-                    {quantityInCart > 0 && !isAdding && (
-                      <ProductBadge>{quantityInCart}</ProductBadge>
-                    )}
-                  </AddToCartButton>
-                  {quantityInCart > 0 && (
-                    <div>
-                      <ViewCartLink onClick={() => setIsCartOpen(true)}>
-                        View Cart
-                      </ViewCartLink>
-                    </div>
-                  )}
+                    Checkout - ${currentPrice.toFixed(2)}
+                  </SubmitButton>
                 </ProductCard>
               );
             })}
@@ -997,28 +1003,30 @@ export default function App() {
                         </CartItemImage>
                         <CartItemInfo>
                           <CartItemName>{item.name}</CartItemName>
-                          <CartItemPrice>${item.price} each</CartItemPrice>
+
                           <CartItemSubtotal>
                             ${(item.price * item.quantity).toFixed(2)}
                           </CartItemSubtotal>
                         </CartItemInfo>
-                        <QuantityControls>
-                          <QuantityButton
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
-                            }
-                          >
-                            -
-                          </QuantityButton>
-                          <span>{item.quantity}</span>
-                          <QuantityButton
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
-                          >
-                            +
-                          </QuantityButton>
-                        </QuantityControls>
+                        <select
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateQuantity(item.id, Number(e.target.value))
+                          }
+                          style={{
+                            padding: "0.5rem",
+                            fontSize: "1rem",
+                            borderRadius: "var(--border-radius)",
+                            border: "2px solid #ddd",
+                            cursor: "pointer"
+                          }}
+                        >
+                          <option value={5}>5</option>
+                          <option value={10}>10</option>
+                          <option value={15}>15</option>
+                          <option value={20}>20</option>
+                          <option value={25}>25</option>
+                        </select>
                       </CartItem>
                     ))}
 
