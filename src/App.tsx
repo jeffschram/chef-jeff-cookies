@@ -19,6 +19,9 @@ const AppContainer = styled.div`
 const Header = styled.header`
   padding: 1rem 0;
   @media (min-width: 46em) {
+    padding: 3rem 0 3rem;
+  }
+  @media (min-width: 64em) {
     padding: 3rem 0 0;
   }
 `;
@@ -37,6 +40,8 @@ const LogoContainer = styled.div`
   }
   @media (min-width: 46em) {
     max-width: 16rem;
+  }
+  @media (min-width: 64em) {
     rotate: -4.76deg;
   }
 `;
@@ -84,6 +89,9 @@ const CartBadge = styled.span`
 const Hero = styled.section`
   padding: 2rem 0;
   @media (min-width: 46em) {
+    padding: 0 0 2rem;
+  }
+  @media (min-width: 64em) {
     padding: 0 0 4rem;
   }
 `;
@@ -91,20 +99,20 @@ const Hero = styled.section`
 const HeroContainer = styled.div`
   display: grid;
   gap: 2rem;
-  @media (min-width: 46em) {
+  @media (min-width: 64em) {
     grid-template-columns: 1fr 1fr;
     align-items: center;
   }
 `;
 
 const HeroMain = styled.div`
-  @media (min-width: 46em) {
+  @media (min-width: 64em) {
     rotate: -4.76deg;
   }
 `;
 const HeroMedia = styled.div`
   display: none;
-  @media (min-width: 46em) {
+  @media (min-width: 64em) {
     display: block;
   }
 `;
@@ -144,7 +152,8 @@ const ProductContent = styled.div`
   gap: 2rem;
   padding: 1.5rem;
   border: 1px solid var(--text-1);
-  border-radius: 1rem;
+  border-radius: 0.25rem;
+  border-bottom: 1rem solid var(--c-yellow);
   @media (min-width: 46em) {
     grid-template-columns: 1fr 1fr;
     align-items: center;
