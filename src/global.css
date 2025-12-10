@@ -5,13 +5,18 @@
   /* --c-yellow: #fbdd56; */
   --c-yellow-light: #fef1b5;
 
+  --c-dark-brown: #1f1e1d;
+  --c-medium-brown: #392E28;
+  --c-orange: #DD7C44;
+  --c-yellow-gold: #F0C976;
+
   --a-surface-1: var(--c-yellow);
   --a-surface-2: var(--c-white);
   --a-text-1: var(--c-black);
-  --a-text-2: var(--c-yellow-light);
+  --a-text-2: var(--c-yellow-gold);
 
   --b-surface-1: var(--c-white);
-  --b-surface-2: var(--c-yellow);
+  --b-surface-2: var(--c-yellow-gold);
   --b-text-1: var(--c-black);
   --b-text-2: var(--c-yellow);
 
@@ -39,6 +44,8 @@
   --text-2: var(--a-text-2);
   --button-bg: var(--a-surface-2);
   --button-text: var(--a-text-1);
+  /* brackground gradient from dark brown to medium brown */
+  /* background: linear-gradient(to top, var(--c-dark-brown), var(--c-medium-brown)); */
 }
 .theme--b {
   --surface-1: var(--b-surface-1);
@@ -61,28 +68,59 @@
   color: var(--text-1);
 }
 
+.decorative--inset-border {
+  position: relative;
+}
+
+.decorative--inset-border::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid var(--c-yellow-light);
+  pointer-events: none;
+}
+
 .decorative--bottom-angled {
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,0 100,82 0,100" fill="white"/></svg>');
   mask-size: 100% 100%;
   padding-bottom: 10% !important;
 }
 
+.decorative--top-angled {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,0 100,82 0,100" fill="white"/></svg>');
+  mask-size: 100% 100%;
+  padding-top: 10% !important;
+}
+
 *:has(.text--highlighted) {
-  line-height: 1.25; /* Ensure parent has normal line height */
+  line-height: 1.25;
 }
 p:has(.text--highlighted) {
-  line-height: 1.35; /* Ensure parent has normal line height */
+  line-height: 1.55;
 }
 
 .text--highlighted {
   font: inherit;
   color: var(--text-1);
-  background-color: var(--surface-2); /* Your highlight color */
-  padding: 0.25em 0.5em; /* Adjust padding as needed */
-  line-height: 0.2; /* Adjust for spacing between lines */
+  background-color: var(--surface-2);
+  padding: 0.25em 0.5em;
+  line-height: 0.2;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   display: inline;
+  border-bottom: 3px solid var(--c-yellow-gold);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 * {
@@ -92,9 +130,9 @@ p:has(.text--highlighted) {
 }
 
 body {
-  -webkit-font-smoothing: antialiased; /* For WebKit-based browsers (Chrome, Safari) */
-  -moz-osx-font-smoothing: grayscale; /* For macOS Firefox */
-  font-smooth: antialiased; /* Standard property */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: antialiased;
   font-family: var(--font-family-sans);
   font-optical-sizing: auto;
   font-weight: 500;
@@ -120,6 +158,7 @@ button {
   border: none;
   outline: none;
   font-family: var(--font-family-display);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   background-color: var(--button-bg);
   color: var(--button-text);
@@ -133,11 +172,17 @@ input {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 2rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 46em) {
   .container {
-    padding: 0 15px;
+    padding: 0 3rem;
+  }
+}
+
+@media (max-width: 64em) {
+  .container {
+    padding: 0 4rem;
   }
 }

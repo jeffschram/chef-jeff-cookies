@@ -4,7 +4,6 @@ import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import StripeCheckout from "./components/StripeCheckout";
-import CookieGallery from "./components/CookieGallery";
 import CookieImage from "./components/CookieImage";
 import AdminDashboard from "./components/AdminDashboard";
 import AddressAutocomplete from "./components/AddressAutocomplete";
@@ -18,22 +17,27 @@ const AppContainer = styled.div`
 `;
 
 const Header = styled.header`
-  padding: 3rem 0;
+  padding: 1rem 0;
+  @media (min-width: 46em) {
+    padding: 3rem 0 0;
+  }
 `;
 
 const HeaderContent = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `;
 
 const LogoContainer = styled.div`
-  width: 100%;
-  max-width: 16rem;
-  rotate: -4.76deg;
+  width: 100%;  
+  max-width: 8rem;
   svg {
     width: 100%;
     height: auto;
+  }
+  @media (min-width: 46em) {
+    max-width: 16rem;
+    rotate: -4.76deg;
   }
 `;
 
@@ -78,88 +82,51 @@ const CartBadge = styled.span`
 `;
 
 const Hero = styled.section`
-  padding: 0 0 4rem 0;
+  padding: 2rem 0;
+  @media (min-width: 46em) {
+    padding: 0 0 4rem;
+  }
 `;
 
 const HeroContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
   gap: 2rem;
-`;
-
-const HeroMain = styled.div``;
-const HeroMedia = styled.div``;
-
-const HeroTitle = styled.h2`
-  rotate: -4.76deg;
-  font-size: 3rem;
-  color: var(--text-1);
-  margin-bottom: 1.5rem;
-`;
-
-const HeroSubtitle = styled.p`
-  font-size: 1.2rem;
-  color: var(--text-dark);
-  margin-bottom: 2rem;
-`;
-
-const Schedule = styled.ul`
-  font-size: 1rem;
-  width: max-content;
-  margin-inline: auto;
-  display: grid;
-  gap: 0.5rem;
-  @media (min-width: 1024px) {
-    width: auto;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1rem;
-  }
-`;
-const ScheduleItem = styled.li`
-  text-align: left;
-  display: flex;
-  gap: 1rem;
-  opacity: 0.8;
-  padding: 0.5rem 1rem;
-  &.today {
-    outline: 3px solid transparent;
-    outline-offset: 3px;
-    opacity: 1;
-  }
-  &.orders {
-    background-color: #22a91d;
-    outline-color: #22a91d;
-    color: white;
-  }
-  &.baking {
-    background-color: #a9411d;
-    outline-color: #a9411d;
-    color: white;
-  }
-  &.pickup {
-    background-color: #a91da4;
-    outline-color: #a91da4;
-    color: white;
-  }
-  @media (min-width: 1024px) {
-    flex-direction: column;
+  @media (min-width: 46em) {
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    padding: 1rem;
   }
 `;
-const ScheduleItemDay = styled.span`
-  font-weight: bold;
+
+const HeroMain = styled.div`
+  @media (min-width: 46em) {
+    rotate: -4.76deg;
+  }
 `;
-const ScheduleItemDescription = styled.span`
-  @media (min-width: 850px) {
-    text-align: center;
+const HeroMedia = styled.div`
+  display: none;
+  @media (min-width: 46em) {
     display: block;
   }
 `;
 
+const HeroTitle = styled.h2`
+  font-size: 2.25rem;
+  @media (min-width: 46em) {
+    font-size: 3rem;
+  }
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin-top: 2rem;
+`;
+
 const ProductsSection = styled.section`
-  padding: 4rem 0;
+  padding: 2rem 0;
+  @media (min-width: 46em) {
+    padding: 4rem 0;
+  }
 `;
 
 const SectionTitle = styled.h3`
@@ -169,33 +136,38 @@ const SectionTitle = styled.h3`
   margin-bottom: 3rem;
 `;
 
-const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+const ProductCard = styled.div`
 `;
 
-const ProductCard = styled.div`
-  background-color: var(--surface-1);
-  border-radius: var(--border-radius-lg);
-  padding: 2rem;
-  box-shadow: var(--shadow);
-  text-align: center;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+const ProductContent = styled.div`
+  display: grid;
+  gap: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--text-1);
+  border-radius: 1rem;
+  @media (min-width: 46em) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
   }
 `;
+
+const ProductMedia = styled.div`
+border: 1px solid var(--text-1);
+  
+`;
+
+const ProductMain = styled.div``;
 
 const ProductName = styled.h4`
   font-size: 1.5rem;
   color: var(--text-1);
   margin-bottom: 0.5rem;
+  @media (min-width: 46em) {
+    font-size: 2rem;
+  }
+    @media (min-width: 64em) {
+    font-size: 2.5rem;
+}
 `;
 
 const ProductDescription = styled.p`
@@ -203,12 +175,44 @@ const ProductDescription = styled.p`
   margin-bottom: 1rem;
 `;
 
-const ProductPrice = styled.p`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--secondary-color);
-  margin-bottom: 1.5rem;
+const Feature = styled.div`
+  padding-bottom: 2rem;
+ @media (min-width: 46em) {
+   padding-bottom: 4rem;
+  }
 `;
+
+
+const FeatureContent = styled.div`
+  display: grid;
+  gap: 2rem;
+  @media (min-width: 46em) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+`;
+
+const FeatureMain = styled.div``;
+
+const FeatureMedia = styled.div``;
+
+const FeatureTitle = styled.h4`
+  font-size: 1.5rem;
+  color: var(--text-1);
+  margin-bottom: 0.5rem;
+  @media (min-width: 46em) {
+    font-size: 2rem;
+  }
+    @media (min-width: 64em) {
+    font-size: 2.5rem;
+}
+`;
+
+const FeatureDescription = styled.p`
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+`;
+  
 
 const AddToCartButton = styled.button`
   padding: 0.75rem 2rem;
@@ -278,11 +282,12 @@ const ModalContent = styled.div`
   border-radius: var(--border-radius-lg);
   padding: 2rem;
   width: 100%;
-  max-height: 90vh;
+  max-height: 99vh;
   overflow-y: auto;
   @media (min-width: 1024px) {
+    max-height: 90vh;
     width: 98%;
-    max-width: 1200px;
+    max-width: 800px;
   }
 `;
 
@@ -306,8 +311,8 @@ const CloseButton = styled.button`
 `;
 
 const CartItem = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 10rem 1fr auto;
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid #eee;
@@ -315,7 +320,6 @@ const CartItem = styled.div`
 `;
 
 const CartItemImage = styled.div`
-  flex-shrink: 0;
 `;
 
 const CartItemInfo = styled.div`
@@ -327,11 +331,9 @@ const CartItemName = styled.p`
   color: var(--text-1);
 `;
 
-const CartItemPrice = styled.p`
-  color: var(--text-dark);
-`;
 
 const CartItemSubtotal = styled.p`
+  margin-top: 1rem;
   font-weight: bold;
   color: var(--secondary-color);
   font-size: 1.1rem;
@@ -485,6 +487,23 @@ const EmptyCart = styled.p`
   margin: 2rem 0;
 `;
 
+const Footer = styled.footer`
+  padding: 3rem 0;
+`;
+
+const FooterContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+`;
+
+const FooterText = styled.p`
+  color: var(--text-dark);
+  font-size: 0.9rem;
+`;
+
 const WarningMessage = styled.div`
   background-color: #fff3cd;
   border: 2px solid #ffc107;
@@ -501,13 +520,98 @@ const WarningMessage = styled.div`
 const products = [
   {
     id: 1,
-    name: "Chocolate Chip Cookie",
+    name: "Chef Jeff's World's Best* Chocolate Chip Cookie",
     description: "The best chocolate chip cookie you will ever have.",
     price: 5.0,
-    quantity: 1,
-    packageType: "nibbler" as const,
+    available: true,
+    defaultImage: "chocolate-chip-5.png",
+    images: {
+      5: "chocolate-chip-5.png",
+      10: "chocolate-chip-10.png",
+      15: "chocolate-chip-15.png",
+      20: "chocolate-chip-20.png",
+      25: "chocolate-chip-25.png"
+    }
+  },
+  {
+    id: 2,
+    name: "Oatmeal Raisin Cookie",
+    description: "A classic favorite with plump raisins and oats.",
+    price: 5.0,
+    available: false,
+    defaultImage: "oatmeal-raisin-5.png",
+    images: {
+      5: "oatmeal-raisin-5.png",
+      10: "oatmeal-raisin-10.png",
+      15: "oatmeal-raisin-15.png",
+      20: "oatmeal-raisin-20.png",
+      25: "oatmeal-raisin-25.png"
+    }
   },
 ];
+
+interface ProductDisplayProps {
+  product: (typeof products)[0];
+  quantity: number;
+  onUpdateQuantity: (quantity: number) => void;
+  onViewCart: () => void;
+}
+
+function ProductDisplay({
+  product,
+  quantity,
+  onUpdateQuantity,
+  onViewCart,
+}: ProductDisplayProps) {
+  return (
+    <ProductCard>
+      <div className="container">
+        <ProductContent>
+          <ProductMedia>
+            <CookieImage product={product} quantity={quantity} />
+          </ProductMedia>
+          <ProductMain>
+            <ProductName>{product.name}</ProductName>
+            <ProductDescription>{product.description}</ProductDescription>
+            <div>
+              <Label htmlFor={`quantity-select-${product.id}`} className="visually-hidden">
+                Select Quantity:
+              </Label>
+              <select
+                id={`quantity-select-${product.id}`}
+                value={quantity}
+                onChange={(e) => onUpdateQuantity(Number(e.target.value))}
+                style={{
+                  padding: "0.5rem",
+                  fontSize: "1rem",
+                  borderRadius: "var(--border-radius)",
+                  border: "2px solid #ddd",
+                  width: "100%",
+                  maxWidth: "200px",
+                }}
+              >
+                <option value={0}>Select Quantity</option>
+                <option value={5}>5 Cookies ($25.00)</option>
+                <option value={10}>10 Cookies ($50.00)</option>
+                <option value={15}>15 Cookies ($75.00)</option>
+                <option value={20}>20 Cookies ($100.00)</option>
+                <option value={25}>25 Cookies ($125.00)</option>
+              </select>
+            </div>
+
+            {quantity > 0 && (
+              <SubmitButton
+              onClick={onViewCart}
+              >
+                View Cart
+              </SubmitButton>
+            )}
+            </ProductMain>
+          </ProductContent>
+      </div>
+    </ProductCard>
+  );
+}
 
 interface CartItem {
   id: number;
@@ -548,7 +652,6 @@ export default function App() {
   const [isAddressInRange, setIsAddressInRange] = useState<boolean | null>(
     null
   );
-  const [selectedQuantity, setSelectedQuantity] = useState(5);
 
   const createOrder = useMutation(api.orders.createOrder);
 
@@ -606,6 +709,22 @@ export default function App() {
           item.id === id ? { ...item, quantity: newQuantity } : item
         )
       );
+    }
+  };
+
+  const setCartQuantity = (product: (typeof products)[0], quantity: number) => {
+    if (quantity === 0) {
+      setCart((prevCart) => prevCart.filter((item) => item.id !== product.id));
+    } else {
+      setCart((prevCart) => {
+        const existingItem = prevCart.find((item) => item.id === product.id);
+        if (existingItem) {
+          return prevCart.map((item) =>
+            item.id === product.id ? { ...item, quantity } : item
+          );
+        }
+        return [...prevCart, { ...product, quantity }];
+      });
     }
   };
 
@@ -693,19 +812,18 @@ export default function App() {
 
   return (
     <AppContainer>
-      <Header className="theme--a">
+      <div className="theme--a decorative--inset-border">
+      <Header>
         <div className="container">
           <HeaderContent>
             <LogoContainer
               onClick={() => setCurrentView("store")}
               style={{ cursor: "pointer" }}
             >
+              <h1 className="visually-hidden">Chef Jeff's Cookies</h1>
               <Logo />
             </LogoContainer>
             <HeaderButtons>
-              <AdminButton onClick={() => setCurrentView("admin")}>
-                Admin
-              </AdminButton>
               <CartButton onClick={() => setIsCartOpen(true)}>
                 <ShoppingCart size={20} strokeWidth={2.5} />
                 {getTotalItems() > 0 ? `Cart - $${getTotalPrice()}` : "Cart"}
@@ -718,134 +836,84 @@ export default function App() {
         </div>
       </Header>
 
-      <Hero className="theme--a decorative--bottom-angled">
+      <Hero>
         <HeroContainer className="container">
           <HeroMain>
             <HeroTitle>
               <span className="text--highlighted">
-                Meet Chef Jeff's World's Best Chocolate Chip Cookies
+                The World's Best<sup>*</sup> Chocolate Chip Cookie!
               </span>
-            </HeroTitle>
-            {/* <HeroSubtitle>
+            </HeroTitle>            
+            <HeroSubtitle>
               <span className="text--highlighted">
-                Hand-made, small-batch, the best chocolate chip cookie you will
-                ever have.
+                Catch the Holiday Cookie Drop! Order now to pick up on Saturday, December 20th.
               </span>
-            </HeroSubtitle> */}
+            </HeroSubtitle>
           </HeroMain>
           <HeroMedia>
             <img src="/images/hero-cookie.png" alt="Chocolate Chip Cookie" />
           </HeroMedia>
-          {/* <Schedule>
-            <ScheduleItem
-              className={`orders delivery${isToday("Sunday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Sunday</ScheduleItemDay>
-              <ScheduleItemDescription>
-                Open&nbsp;for&nbsp;Orders &amp;&nbsp;Delivery
-              </ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`orders${isToday("Monday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Monday</ScheduleItemDay>
-              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`orders${isToday("Tuesday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Tuesday</ScheduleItemDay>
-              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`orders${isToday("Wednesday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Wednesday</ScheduleItemDay>
-              <ScheduleItemDescription>Open for Orders</ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`baking${isToday("Thursday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Thursday</ScheduleItemDay>
-              <ScheduleItemDescription>Baking</ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`baking${isToday("Friday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Friday</ScheduleItemDay>
-              <ScheduleItemDescription>Baking</ScheduleItemDescription>
-            </ScheduleItem>
-            <ScheduleItem
-              className={`pickup${isToday("Saturday") ? " today" : ""}`}
-            >
-              <ScheduleItemDay>Saturday</ScheduleItemDay>
-              <ScheduleItemDescription>Pickup</ScheduleItemDescription>
-            </ScheduleItem>
-          </Schedule> */}
         </HeroContainer>
       </Hero>
+      </div>
 
-      <ProductsSection>
-        <div className="container">
-          <SectionTitle>Our Cookie Packages</SectionTitle>
-          <ProductGrid>
-            {products.map((product) => {
-              const quantityInCart = getItemQuantityInCart(product.id);
-              const isAdding = addingToCart === product.id;
-              const currentPrice = product.price * selectedQuantity;
-
-              return (
-                <ProductCard key={product.id} style={{ maxWidth: "500px", margin: "0 auto" }}>
-                  <CookieGallery packageType={product.packageType} />
-                  <ProductName>{product.name}</ProductName>
-                  <ProductDescription>{product.description}</ProductDescription>
-                  
-                  <div style={{ margin: "1.5rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
-                    <Label htmlFor="quantity-select" style={{ marginBottom: 0 }}>Select Quantity:</Label>
-                    <select
-                      id="quantity-select"
-                      value={selectedQuantity}
-                      onChange={(e) => setSelectedQuantity(Number(e.target.value))}
-                      style={{
-                        padding: "0.5rem",
-                        fontSize: "1rem",
-                        borderRadius: "var(--border-radius)",
-                        border: "2px solid #ddd",
-                        width: "100%",
-                        maxWidth: "200px"
-                      }}
-                    >
-                      <option value={5}>5 Cookies ($25.00)</option>
-                      <option value={10}>10 Cookies ($50.00)</option>
-                      <option value={15}>15 Cookies ($75.00)</option>
-                      <option value={20}>20 Cookies ($100.00)</option>
-                      <option value={25}>25 Cookies ($125.00)</option>
-                    </select>
-                  </div>
-
-                  <SubmitButton
-                    onClick={() => handleDirectCheckout(product, selectedQuantity)}
-                    style={{ width: "100%", maxWidth: "300px", margin: "0 auto" }}
-                  >
-                    Checkout - ${currentPrice.toFixed(2)}
-                  </SubmitButton>
-                </ProductCard>
-              );
-            })}
-          </ProductGrid>
-
-          <DeliveryInfo>
-            <h4 style={{ color: "var(--text-1)", marginBottom: "1rem" }}>
-              Delivery Information
-            </h4>
-            <p>
-              <strong>Pickup:</strong> Free on Saturdays
-              <br />
-              <strong>Local Delivery:</strong> Additional $10 fee
-            </p>
-          </DeliveryInfo>
-        </div>
+      <ProductsSection className="theme--b">     
+        {/* <SectionTitle>Our Cookie Packages</SectionTitle> */}
+        {products
+          .filter((product) => product.available)
+          .map((product) => (
+            <ProductDisplay
+              key={product.id}
+              product={product}
+              quantity={getItemQuantityInCart(product.id)}
+              onUpdateQuantity={(quantity) =>
+                setCartQuantity(product, quantity)
+              }
+              onViewCart={() => setIsCartOpen(true)}
+            />
+          ))}
       </ProductsSection>
+
+      <Feature>
+        <div className="container">
+          <FeatureContent>
+            <FeatureMedia>
+              <img src="/images/delivery-map.jpg" alt="Delivery Map" />
+            </FeatureMedia>
+            <FeatureMain>
+            <FeatureTitle>Give Me My Cookies!</FeatureTitle>
+            <FeatureDescription>
+              Order now to pick up on Saturday, December 20th at the Danger Gallery in Stamford, CT.
+            </FeatureDescription>
+            <FeatureDescription>
+              Or if you fit within the delivery radius, we can deliver to your door on Sunday December 21st.
+            </FeatureDescription>
+            </FeatureMain>
+          </FeatureContent>
+        </div>
+      </Feature>
+
+      <Footer className="theme--a decorative--inset-border">
+        <div className="container">
+          <FooterContent>
+            <FooterText>
+              <strong>Chef Jeff Cookies</strong>
+              <br />
+              652 Glenbrook Rd #3, Stamford, CT 06906
+              <br />
+              <a href="mailto:orders@chefjeffcookies.com" style={{ color: "inherit" }}>
+                orders@chefjeffcookies.com
+              </a>
+            </FooterText>
+            <FooterText>
+              Licensed Cottage Food Provider
+            </FooterText>
+            <AdminButton onClick={() => setCurrentView("admin")}>
+              Admin
+            </AdminButton>
+          </FooterContent>
+        </div>
+      </Footer>
 
       {isCartOpen && (
         <Modal onClick={(e) => e.target === e.currentTarget && closeModal()}>
@@ -992,14 +1060,17 @@ export default function App() {
                   <EmptyCart>Your cart is empty</EmptyCart>
                 ) : (
                   <>
-                    {cart.map((item) => (
+                    {cart.map((item) => {
+                      const product = products.find(p => p.id === item.id);
+                      return (
                       <CartItem key={item.id}>
                         <CartItemImage>
-                          <CookieImage
-                            packageType={item.packageType || "nibbler"}
-                            variant={0}
-                            size={50}
-                          />
+                          {product && (
+                            <CookieImage
+                              product={product}
+                              quantity={item.quantity}
+                            />
+                          )}
                         </CartItemImage>
                         <CartItemInfo>
                           <CartItemName>{item.name}</CartItemName>
@@ -1028,7 +1099,8 @@ export default function App() {
                           <option value={25}>25</option>
                         </select>
                       </CartItem>
-                    ))}
+                    );
+                    })}
 
                     <CartSummary>
                       <FormGroup>
@@ -1049,7 +1121,7 @@ export default function App() {
                             />
                             <RadioLabel>Pickup (Free)</RadioLabel>
                             <RadioHint>
-                              Saturdays from Noon - 4 PM in Stamford, CT
+                              Saturday, December 20th from Noon - 4 PM in Stamford, CT
                               <br /> at the Danger Gallery
                               <br />
                               <a
@@ -1084,7 +1156,7 @@ export default function App() {
                       </FormGroup>
 
                       {orderForm.deliveryType === "delivery" && (
-                        <FormGroup>
+                        <FormGroup style={{ paddingBottom: "1rem" }}>
                           <Label style={{ marginTop: "2rem" }}>
                             Delivery Address *
                           </Label>
