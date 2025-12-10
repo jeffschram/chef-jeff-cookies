@@ -1,49 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { generateCookieImage, cookieVariations, CookieImageOptions } from '../utils/imageGenerator';
+import React from 'react';
 
 interface CookieImageProps {
-  packageType: 'nibbler' | 'family' | 'pro';
-  variant?: number;
-  size?: number;
+  product: {
+    defaultImage: string;
+    images: { [key: number]: string };
+  };
+  quantity?: number;
   className?: string;
 }
 
 export default function CookieImage({ 
-  packageType, 
-  variant = 0, 
-  size = 120,
+  product, 
+  quantity = 0, 
   className = '' 
 }: CookieImageProps) {
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  useEffect(() => {
-    const variations = cookieVariations[packageType];
-    const options: CookieImageOptions = {
-      ...variations[variant % variations.length],
-      size
-    };
-    
-    const url = generateCookieImage(options);
-    setImageUrl(url);
-  }, [packageType, variant, size]);
-
-  if (!imageUrl) {
-    return (
-      <div 
-        className={`bg-gray-200 rounded-full flex items-center justify-center ${className}`}
-        style={{ width: size, height: size }}
-      >
-        🍪
-      </div>
-    );
-  }
+  // Use the image for the specific quantity, or fall back to the default image
+  const imagePath = quantity > 0 && product.images[quantity] 
+    ? `/images/${product.images[quantity]}`
+    : `/images/${product.defaultImage}`;
 
   return (
     <img 
-      src={imageUrl} 
-      alt={`${packageType} cookie`}
-      className={`rounded-full ${className}`}
-      style={{ width: size, height: size }}
+      src={imagePath} 
+      alt="Cookie"
+      className={`cookie-image ${className}`}
     />
   );
 }
