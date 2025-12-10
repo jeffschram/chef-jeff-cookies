@@ -172,16 +172,16 @@ input {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 7.5%;
 }
 
-@media (max-width: 46em) {
+@media (min-width: 46em) {
   .container {
     padding: 0 3rem;
   }
 }
 
-@media (max-width: 64em) {
+@media (min-width: 64em) {
   .container {
     padding: 0 4rem;
   }
