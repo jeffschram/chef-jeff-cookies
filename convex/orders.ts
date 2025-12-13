@@ -122,7 +122,7 @@ export const sendOrderEmails = internalAction({
 
       const { data, error } = await resend.emails.send({
         // Use your verified domain email address as the sender
-        from: "Chef Jeff Cookies <schramindustries@gmail.com>",
+        from: "Chef Jeff Cookies <noreply@chefjeffcookies.com>",
         to: args.customerEmail,
         subject: `Order Confirmation - Chef Jeff Cookies (#${args.orderId})`,
         html: emailHtml,
