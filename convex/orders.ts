@@ -13,7 +13,7 @@ export const createOrder = mutation({
   args: {
     customerName: v.string(),
     customerEmail: v.string(),
-    customerPhone: v.string(),
+    customerPhone: v.optional(v.string()),
     items: v.array(
       v.object({
         name: v.string(),

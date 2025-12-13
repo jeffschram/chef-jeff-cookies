@@ -34,15 +34,13 @@ const HeaderContent = styled.div`
 const LogoContainer = styled.div`
   width: 100%;  
   max-width: 8rem;
+  rotate: var(--rotate);
   svg {
     width: 100%;
     height: auto;
   }
   @media (min-width: 46em) {
     max-width: 16rem;
-  }
-  @media (min-width: 64em) {
-    rotate: -4.76deg;
   }
 `;
 
@@ -85,9 +83,9 @@ const CartBadge = styled.span`
 `;
 
 const Hero = styled.section`
-  padding: 2rem 0;
+  padding: 2rem 0 3rem;
   @media (min-width: 46em) {
-    padding: 0 0 2rem;
+    padding: 0 0 4rem;
   }
   @media (min-width: 64em) {
     padding: 0 0 4rem;
@@ -104,9 +102,7 @@ const HeroContainer = styled.div`
 `;
 
 const HeroMain = styled.div`
-  @media (min-width: 64em) {
-    rotate: -4.76deg;
-  }
+  rotate: var(--rotate);  
 `;
 const HeroMedia = styled.div`
   display: none;
@@ -163,6 +159,7 @@ border-radius: 0.25rem;
   border-radius: 0 0 0.25rem 0.25rem;
 }
     @media (min-width: 46em) {
+      gap: 4rem;
       grid-template-columns: 1fr 1fr;
       align-items: center;
     }
@@ -269,10 +266,6 @@ const ViewCartLink = styled.button`
   text-decoration: underline;
   font-size: 0.9rem;
   margin-top: 0.5rem;
-
-  &:hover {
-    color: var(--secondary-color);
-  }
 `;
 
 const DeliveryInfo = styled.div`
@@ -492,10 +485,6 @@ const SubmitButton = styled.button`
   margin-top: 1rem;
   transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: var(--secondary-color);
-  }
-
   &:disabled {
     background-color: #ccc;
     cursor: not-allowed;
@@ -509,18 +498,61 @@ const EmptyCart = styled.p`
   margin: 2rem 0;
 `;
 
+const FinePrint = styled.div`
+  padding: 2.5% 0 5%;
+  font-size: 0.8rem;
+  color: var(--text-dark);
+  opacity: 0.65;
+  margin: 1rem 0;
+  p + p {
+    margin-top: 1rem;
+  }
+`;
+
 const Footer = styled.footer`
   padding: 3rem 0;
 `;
 
 const FooterContent = styled.div`
-  
+  display: grid;
+  gap: 2rem;
+  @media (min-width: 46em) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const FooterLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const FooterRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  @media (min-width: 46em) {
+    align-items: flex-end;
+  }
+`;
+
+const PaymentInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const PaymentLogos = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 `;
 
 const FooterText = styled.p`
   color: var(--text-dark);
   font-size: 0.9rem;
-  margin-bottom: 1rem;
 `;
 
 const WarningMessage = styled.div`
@@ -895,45 +927,77 @@ export default function App() {
 
       <Feature>
         <div className="container">
-          <FeatureContent>
+          <FeatureContent>            
+            <FeatureMain>
+              <FeatureTitle>I Want My Cookies!</FeatureTitle>
+              <FeatureDescription>
+                Order now to pick up on Saturday, December 20th at the Danger Gallery in Stamford, CT. 
+                <a 
+                  href="https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  className="map-link"
+                >
+                  652 Glenbrook Rd #3, Stamford, CT 06906
+                </a>
+              </FeatureDescription>
+              <FeatureDescription>
+                Or if you fit within the delivery radius, we can deliver to your door on Sunday December 21st.
+              </FeatureDescription>
+            </FeatureMain>
             <FeatureMedia>
               <img src="/images/delivery-map.jpg" alt="Delivery Map" />
             </FeatureMedia>
-            <FeatureMain>
-            <FeatureTitle>Give Me My Cookies!</FeatureTitle>
-            <FeatureDescription>
-              Order now to pick up on Saturday, December 20th at the Danger Gallery in Stamford, CT. <a
-                                href="https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D"
-                                target="_blank"
-                                className="map-link"
-                              >
-                                652 Glenbrook Rd #3, Stamford, CT 06906
-                              </a>
-            </FeatureDescription>
-            <FeatureDescription>
-              Or if you fit within the delivery radius, we can deliver to your door on Sunday December 21st.
-            </FeatureDescription>
-            </FeatureMain>
           </FeatureContent>
         </div>
       </Feature>
 
+      <FinePrint>
+        <div className="container">
+          <p>* Yes, there was a world-wide international competition where chefs and bakers from accross the globe presented their chocolate chip cookies to an illustrious panel of compentent judges and they unamimously declared Chef Jeff's Cookies to be the best in the world. **</p>
+          <p>** OK maybe that didn't happen, but these are really good cookies.</p>
+        </div>
+      </FinePrint>
+
       <Footer className="theme--a decorative--inset-border">
         <div className="container">
           <FooterContent>
-            <FooterText>
-              <strong>Chef Jeff Cookies</strong> a division of Schram Industries.
-              <br />
-              <a href="mailto:schramindustries@gmail.com" className="map-link" style={{ color: "inherit" }}>
-                schramindustries@gmail.com
-              </a>
-            </FooterText>
-            <FooterText>
-              Licensed Cottage Food Provider in Connecticut.
-            </FooterText>
-            <AdminButton onClick={() => setCurrentView("admin")}>
-              @2025 Schram Industries
-            </AdminButton>
+            <FooterLeft>
+              <FooterText>
+                <strong>Chef Jeff Cookies</strong> is a division of Schram Industries.
+              </FooterText>
+              <FooterText>
+                <a href="mailto:schramindustries@gmail.com" className="map-link" style={{ color: "inherit" }}>
+                  schramindustries@gmail.com
+                </a>
+              </FooterText>
+              <FooterText>
+                Licensed Cottage Food Provider in Connecticut.
+              </FooterText>
+            </FooterLeft>
+            
+            <FooterRight>
+              <PaymentInfo>
+                <FooterText style={{ fontSize: "0.85rem" }}>
+                  Payments processed securely by Stripe
+                </FooterText>
+                <PaymentLogos>
+                  
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/250px-Visa_Inc._logo.svg.png" alt="Visa" width="48" />
+
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width="48" />
+
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" width="48" />
+
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" width="48" />
+                </PaymentLogos>
+              </PaymentInfo>
+              <AdminButton onClick={() => setCurrentView("admin")}>
+                ©2025 Schram Industries
+              </AdminButton>
+            </FooterRight>
           </FooterContent>
         </div>
       </Footer>
@@ -944,7 +1008,8 @@ export default function App() {
             <ModalHeader>
               <ModalTitle>
                 {checkoutStep === "cart" && "Your Cart"}
-                {checkoutStep === "details" && "Checkout"}
+                {checkoutStep === "details" && "Customer Info"}
+                {checkoutStep === "payment" && "Payment"}
                 {checkoutStep === "success" && "Order Complete"}
               </ModalTitle>
               <CloseButton onClick={closeModal}>×</CloseButton>
@@ -1039,7 +1104,7 @@ export default function App() {
                   />
                 </FormGroup>
 
-                <FormGroup>
+                <FormGroup style={{ margin: "1rem 0" }}>
                   <Label>Email *</Label>
                   <Input
                     type="email"
@@ -1054,20 +1119,26 @@ export default function App() {
                   />
                 </FormGroup>
 
-                <FormGroup>
-                  <Label>Phone *</Label>
-                  <Input
-                    type="tel"
-                    required
-                    value={orderForm.customerPhone}
-                    onChange={(e) =>
-                      setOrderForm((prev) => ({
-                        ...prev,
-                        customerPhone: e.target.value,
-                      }))
-                    }
-                  />
-                </FormGroup>
+                <SubmitButton
+                  onClick={() => setCheckoutStep("payment")}
+                  disabled={!orderForm.customerName || !orderForm.customerEmail}
+                >
+                  Continue to Pay
+                </SubmitButton>
+              </div>
+            ) : checkoutStep === "payment" ? (
+              <div>
+                <button
+                  onClick={() => setCheckoutStep("details")}
+                  style={{
+                    background: "none",
+                    color: "var(--text-1)",
+                    marginBottom: "1rem",
+                    textDecoration: "underline",
+                  }}
+                >
+                  ← Back to customer info
+                </button>
 
                 <StripeCheckout
                   amount={getTotalPrice()}

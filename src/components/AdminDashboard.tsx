@@ -201,10 +201,6 @@ const LoginButton = styled.button`
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: var(--secondary-color);
-  }
 `;
 
 const ErrorMessage = styled.div`
@@ -410,7 +406,7 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <AdminContainer>
+      <AdminContainer className="theme--b">
         <div className="container">
           <LoginForm onSubmit={handleLogin}>
             <LoginTitle>Admin Login</LoginTitle>
@@ -432,7 +428,7 @@ export default function AdminDashboard() {
   const weeklyData = groupOrdersByWeek(orders || []);
 
   return (
-    <AdminContainer>
+    <AdminContainer className="theme--b">
       <AdminHeader>
         <div className="container">
           <AdminTitle>Chef Jeff Cookies - Admin Dashboard</AdminTitle>

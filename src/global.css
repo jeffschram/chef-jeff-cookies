@@ -9,6 +9,7 @@
   --c-medium-brown: #392E28;
   --c-orange: #DD7C44;
   --c-yellow-gold: #F0C976;
+  --c-lightest-grey: #f5f5f5;
 
   --a-surface-1: var(--c-yellow);
   --a-surface-2: var(--c-white);
@@ -34,7 +35,13 @@
   --font-family-display: "BBH Sans Hegarty", sans-serif;
   --font-family-sans: "Open Sans", sans-serif;
 
-  --rotate: -4.76deg;
+  --rotate: -1.5deg;
+}
+
+@media (min-width: 64em) {
+  :root {
+    --rotate: -4.76deg;
+  }
 }
 
 .theme--a {
@@ -162,6 +169,16 @@ button {
   text-transform: uppercase;
   background-color: var(--button-bg);
   color: var(--button-text);
+  border: 1px solid transparent;
+}
+button:hover:not(:disabled) {
+    background-color: var(--c-black);
+    color: var(--c-white);
+    border: 1px solid var(--c-white);
+}
+button:disabled {
+    background-color: var(--c-lightest-grey);
+    color: var(--c-black);
 }
 
 input {
