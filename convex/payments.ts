@@ -35,7 +35,7 @@ export const createPaymentIntent = action({
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(args.amount * 100), // Convert to cents
         currency: "usd",
-        receipt_email: args.customerEmail,
+        ...(args.customerEmail && { receipt_email: args.customerEmail }),
         metadata: {
           orderId: args.orderId,
           customerName: args.customerName,

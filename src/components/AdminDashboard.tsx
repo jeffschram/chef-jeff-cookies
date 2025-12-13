@@ -201,10 +201,6 @@ const LoginButton = styled.button`
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: var(--secondary-color);
-  }
 `;
 
 const ErrorMessage = styled.div`
@@ -259,7 +255,7 @@ export default function AdminDashboard() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Simple password check - in production, use proper authentication
-    if (password === "admin123") {
+    if (password === "2022#Ch#2022") {
       setIsAuthenticated(true);
       setLoginError("");
     } else {
@@ -410,7 +406,7 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <AdminContainer>
+      <AdminContainer className="theme--b">
         <div className="container">
           <LoginForm onSubmit={handleLogin}>
             <LoginTitle>Admin Login</LoginTitle>
@@ -422,17 +418,7 @@ export default function AdminDashboard() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <LoginButton type="submit">Login</LoginButton>
-            <div
-              style={{
-                fontSize: "0.8rem",
-                color: "#666",
-                textAlign: "center",
-                marginTop: "1rem",
-              }}
-            >
-              Demo password: admin123
-            </div>
+            <LoginButton type="submit">Login</LoginButton>           
           </LoginForm>
         </div>
       </AdminContainer>
@@ -442,7 +428,7 @@ export default function AdminDashboard() {
   const weeklyData = groupOrdersByWeek(orders || []);
 
   return (
-    <AdminContainer>
+    <AdminContainer className="theme--b">
       <AdminHeader>
         <div className="container">
           <AdminTitle>Chef Jeff Cookies - Admin Dashboard</AdminTitle>

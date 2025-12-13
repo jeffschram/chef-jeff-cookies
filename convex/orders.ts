@@ -13,7 +13,7 @@ export const createOrder = mutation({
   args: {
     customerName: v.string(),
     customerEmail: v.string(),
-    customerPhone: v.string(),
+    customerPhone: v.optional(v.string()),
     items: v.array(
       v.object({
         name: v.string(),
@@ -122,7 +122,7 @@ export const sendOrderEmails = internalAction({
 
       const { data, error } = await resend.emails.send({
         // Use your verified domain email address as the sender
-        from: "Chef Jeff Cookies <orders@chefjeffcookies.com>",
+        from: "Chef Jeff Cookies <schramindustries@gmail.com>",
         to: args.customerEmail,
         subject: `Order Confirmation - Chef Jeff Cookies (#${args.orderId})`,
         html: emailHtml,

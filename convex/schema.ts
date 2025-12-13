@@ -6,7 +6,7 @@ const applicationTables = {
   orders: defineTable({
     customerName: v.string(),
     customerEmail: v.string(),
-    customerPhone: v.string(),
+    customerPhone: v.optional(v.string()),
     items: v.array(v.object({
       name: v.string(),
       price: v.number(),
