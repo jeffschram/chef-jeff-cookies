@@ -19,6 +19,10 @@ const applicationTables = {
     fulfillmentStatus: v.optional(v.union(v.literal("pending"), v.literal("fulfilled"))),
     orderDate: v.string(),
   }),
+  settings: defineTable({
+    key: v.string(),
+    value: v.any(),
+  }).index("by_key", ["key"]),
 };
 
 export default defineSchema({

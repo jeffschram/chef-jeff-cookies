@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import StripeCheckout from "./components/StripeCheckout";
@@ -705,6 +705,12 @@ export default function App() {
   );
 
   const createOrder = useMutation(api.orders.createOrder);
+  const testPricing = useQuery(api.settings.getTestPricing);
+
+  // Apply test pricing if enabled
+  const getProductPrice = (basePrice: number) => {
+    return testPricing ? 0.15 : basePrice;
+  };
 
   // Get current day of week (0 = Sunday, 1 = Monday, etc.)
   const getCurrentDay = () => {
@@ -727,7 +733,7 @@ export default function App() {
   };
 
   if (currentView === "admin") {
-    return <AdminDashboard />;
+    return <AdminDashboard onBackToStore={() => setCurrentView("store")} />;
   }
 
   const addToCart = async (product: (typeof products)[0], quantity: number) => {
@@ -764,6 +770,7 @@ export default function App() {
   };
 
   const setCartQuantity = (product: (typeof products)[0], quantity: number) => {
+    const price = getProductPrice(product.price);
     if (quantity === 0) {
       setCart((prevCart) => prevCart.filter((item) => item.id !== product.id));
     } else {
@@ -771,10 +778,10 @@ export default function App() {
         const existingItem = prevCart.find((item) => item.id === product.id);
         if (existingItem) {
           return prevCart.map((item) =>
-            item.id === product.id ? { ...item, quantity } : item
+            item.id === product.id ? { ...item, quantity, price } : item
           );
         }
-        return [...prevCart, { ...product, quantity }];
+        return [...prevCart, { ...product, quantity, price }];
       });
     }
   };
@@ -912,17 +919,20 @@ export default function App() {
         {/* <SectionTitle>Our Cookie Packages</SectionTitle> */}
         {products
           .filter((product) => product.available)
-          .map((product) => (
+          .map((product) => {
+            const productPrice = getProductPrice(product.price);
+            return (
             <ProductDisplay
               key={product.id}
-              product={product}
+              product={{...product, price: productPrice}}
               quantity={getItemQuantityInCart(product.id)}
               onUpdateQuantity={(quantity) =>
                 setCartQuantity(product, quantity)
               }
               onViewCart={() => setIsCartOpen(true)}
             />
-          ))}
+          );
+          })}
       </ProductsSection>
 
       <Feature>
