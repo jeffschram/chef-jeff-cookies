@@ -13,6 +13,7 @@ import type * as http from "../http.js";
 import type * as orders from "../orders.js";
 import type * as payments from "../payments.js";
 import type * as router from "../router.js";
+import type * as settings from "../settings.js";
 
 import type {
   ApiFromModules,
@@ -26,6 +27,7 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   payments: typeof payments;
   router: typeof router;
+  settings: typeof settings;
 }>;
 
 /**

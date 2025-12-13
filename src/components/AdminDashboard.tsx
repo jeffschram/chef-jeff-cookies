@@ -23,6 +23,62 @@ const AdminTitle = styled.h1`
   margin-bottom: 0.5rem;
 `;
 
+const TestModeToggle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+`;
+
+const ToggleSwitch = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+`;
+
+const ToggleInput = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  &:checked + span {
+    background-color: #22c55e;
+  }
+
+  &:checked + span:before {
+    transform: translateX(26px);
+  }
+`;
+
+const ToggleSlider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+`;
+
 const WeekSection = styled.div`
   background-color: var(--surface-1);
   border-radius: var(--border-radius-lg);
@@ -241,7 +297,11 @@ const packageQuantities: Record<string, number> = {
   "The Pro": 12,
 };
 
-export default function AdminDashboard() {
+interface AdminDashboardProps {
+  onBackToStore: () => void;
+}
+
+export default function AdminDashboard({ onBackToStore }: AdminDashboardProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -251,6 +311,12 @@ export default function AdminDashboard() {
   const updateFulfillmentStatus = useMutation(
     api.orders.updateFulfillmentStatus
   );
+  const testPricing = useQuery(api.settings.getTestPricing);
+  const toggleTestPricing = useMutation(api.settings.toggleTestPricing);
+
+  const handleToggleTestPricing = async () => {
+    await toggleTestPricing();
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -431,8 +497,25 @@ export default function AdminDashboard() {
     <AdminContainer className="theme--b">
       <AdminHeader>
         <div className="container">
-          <AdminTitle>Chef Jeff Cookies - Admin Dashboard</AdminTitle>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+            <AdminTitle>Chef Jeff Cookies - Admin Dashboard</AdminTitle>
+            <RouteButton onClick={onBackToStore}>
+              ← Back to Store
+            </RouteButton>
+          </div>
           <p>Order Management & Weekly Reports</p>
+          <TestModeToggle>
+            <span>Test Mode ($0.15 pricing):</span>
+            <ToggleSwitch>
+              <ToggleInput
+                type="checkbox"
+                checked={testPricing ?? false}
+                onChange={handleToggleTestPricing}
+              />
+              <ToggleSlider />
+            </ToggleSwitch>
+            <span>{testPricing ? "ON" : "OFF"}</span>
+          </TestModeToggle>
         </div>
       </AdminHeader>
 
