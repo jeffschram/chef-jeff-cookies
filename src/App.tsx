@@ -63,11 +63,9 @@ const CartButton = styled.button`
   gap: 0.5rem;
 `;
 
-const AdminButton = styled.button`
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+const AdminButton = styled.a`
+  color: var(--text-1);
+  
 `;
 
 const CartBadge = styled.span`
@@ -148,16 +146,26 @@ const ProductCard = styled.div`
 `;
 
 const ProductContent = styled.div`
-  display: grid;
-  gap: 2rem;
-  padding: 1.5rem;
-  border: 1px solid var(--text-1);
-  border-radius: 0.25rem;
-  border-bottom: 1rem solid var(--c-yellow);
-  @media (min-width: 46em) {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-  }
+position: relative;
+display: grid;
+gap: 2rem;
+padding: 1.5rem;
+border: 1px solid var(--text-1);
+border-radius: 0.25rem;
+&::after {
+  top: 100%;
+  height: 1rem;
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #333;
+  border-radius: 0 0 0.25rem 0.25rem;
+}
+    @media (min-width: 46em) {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
 `;
 
 const ProductMedia = styled.div`
@@ -185,9 +193,9 @@ const ProductDescription = styled.p`
 `;
 
 const Feature = styled.div`
-  padding-bottom: 2rem;
+  padding: 2rem 0;
  @media (min-width: 46em) {
-   padding-bottom: 4rem;
+   padding: 4rem 0;
   }
 `;
 
@@ -198,6 +206,7 @@ const FeatureContent = styled.div`
   @media (min-width: 46em) {
     grid-template-columns: 1fr 1fr;
     align-items: center;
+    gap: 4rem;
   }
 `;
 
@@ -208,7 +217,7 @@ const FeatureMedia = styled.div``;
 const FeatureTitle = styled.h4`
   font-size: 1.5rem;
   color: var(--text-1);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   @media (min-width: 46em) {
     font-size: 2rem;
   }
@@ -219,6 +228,7 @@ const FeatureTitle = styled.h4`
 
 const FeatureDescription = styled.p`
   color: var(--text-dark);
+  line-height: 1.5;
   margin-bottom: 1rem;
 `;
   
@@ -321,11 +331,14 @@ const CloseButton = styled.button`
 
 const CartItem = styled.div`
   display: grid;
-  grid-template-columns: 10rem 1fr auto;
-  align-items: center;
+  grid-template-columns: 5rem 1fr auto;
+  align-items: start;
   padding: 1rem 0;
   border-bottom: 1px solid #eee;
   gap: 1rem;
+  @media (min-width: 46em) {
+    grid-template-columns: 10rem 1fr auto;
+  }
 `;
 
 const CartItemImage = styled.div`
@@ -501,16 +514,13 @@ const Footer = styled.footer`
 `;
 
 const FooterContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  text-align: center;
+  
 `;
 
 const FooterText = styled.p`
   color: var(--text-dark);
   font-size: 0.9rem;
+  margin-bottom: 1rem;
 `;
 
 const WarningMessage = styled.div`
@@ -892,7 +902,13 @@ export default function App() {
             <FeatureMain>
             <FeatureTitle>Give Me My Cookies!</FeatureTitle>
             <FeatureDescription>
-              Order now to pick up on Saturday, December 20th at the Danger Gallery in Stamford, CT.
+              Order now to pick up on Saturday, December 20th at the Danger Gallery in Stamford, CT. <a
+                                href="https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D"
+                                target="_blank"
+                                className="map-link"
+                              >
+                                652 Glenbrook Rd #3, Stamford, CT 06906
+                              </a>
             </FeatureDescription>
             <FeatureDescription>
               Or if you fit within the delivery radius, we can deliver to your door on Sunday December 21st.
@@ -906,19 +922,17 @@ export default function App() {
         <div className="container">
           <FooterContent>
             <FooterText>
-              <strong>Chef Jeff Cookies</strong>
+              <strong>Chef Jeff Cookies</strong> a division of Schram Industries.
               <br />
-              652 Glenbrook Rd #3, Stamford, CT 06906
-              <br />
-              <a href="mailto:orders@chefjeffcookies.com" style={{ color: "inherit" }}>
-                orders@chefjeffcookies.com
+              <a href="mailto:schramindustries@gmail.com" className="map-link" style={{ color: "inherit" }}>
+                schramindustries@gmail.com
               </a>
             </FooterText>
             <FooterText>
-              Licensed Cottage Food Provider
+              Licensed Cottage Food Provider in Connecticut.
             </FooterText>
             <AdminButton onClick={() => setCurrentView("admin")}>
-              Admin
+              @2025 Schram Industries
             </AdminButton>
           </FooterContent>
         </div>
@@ -1136,6 +1150,7 @@ export default function App() {
                               <a
                                 href="https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D"
                                 target="_blank"
+                                className="map-link"
                               >
                                 652 Glenbrook Rd #3, Stamford, CT 06906
                               </a>

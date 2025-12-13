@@ -169,6 +169,12 @@ input {
   outline: none;
 }
 
+.map-link {
+  color: inherit;
+  font-weight: bold;
+  text-decoration: underline; 
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
