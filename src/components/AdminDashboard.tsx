@@ -393,8 +393,8 @@ export default function AdminDashboard({ onBackToStore }: AdminDashboardProps) {
 
   const calculateTotalCookies = (items: any[]): number => {
     return items.reduce((total, item) => {
-      const cookiesPerPackage = packageQuantities[item.name] || 0;
-      return total + cookiesPerPackage * item.quantity;
+      // item.quantity now represents the number of cookies directly
+      return total + item.quantity;
     }, 0);
   };
 
@@ -592,16 +592,13 @@ export default function AdminDashboard({ onBackToStore }: AdminDashboardProps) {
                             <TableCell>
                               <OrderItems>
                                 {order.items.map((item: any, idx: number) => {
-                                  const cookiesPerPackage =
-                                    packageQuantities[item.name] || 0;
-                                  const totalCookiesForItem =
-                                    cookiesPerPackage * item.quantity;
+                                  // item.quantity is the number of cookies
                                   return (
                                     <ItemLine key={idx}>
                                       <strong>
                                         {item.quantity}x {item.name}
                                       </strong>{" "}
-                                      ({totalCookiesForItem} cookies) - $
+                                      ({item.quantity} cookies) - $
                                       {(item.price * item.quantity).toFixed(2)}
                                     </ItemLine>
                                   );
@@ -743,16 +740,13 @@ export default function AdminDashboard({ onBackToStore }: AdminDashboardProps) {
                             <TableCell>
                               <OrderItems>
                                 {order.items.map((item: any, idx: number) => {
-                                  const cookiesPerPackage =
-                                    packageQuantities[item.name] || 0;
-                                  const totalCookiesForItem =
-                                    cookiesPerPackage * item.quantity;
+                                  // item.quantity is the number of cookies
                                   return (
                                     <ItemLine key={idx}>
                                       <strong>
                                         {item.quantity}x {item.name}
                                       </strong>{" "}
-                                      ({totalCookiesForItem} cookies) - $
+                                      ({item.quantity} cookies) - $
                                       {(item.price * item.quantity).toFixed(2)}
                                     </ItemLine>
                                   );
