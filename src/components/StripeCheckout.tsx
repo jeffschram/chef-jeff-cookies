@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
-  PaymentElement,
+  CardElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
@@ -21,6 +21,13 @@ const PaymentForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`;
+
+const CardElementContainer = styled.div`
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: var(--border-radius);
+  background-color: white;
 `;
 
 const PayButton = styled.button`
@@ -85,26 +92,68 @@ function CheckoutForm({
       return;
     }
 
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      return;
+    }
+
     setIsProcessing(true);
     setError(null);
 
     try {
-      // Confirm payment with Stripe using PaymentElement
-      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: window.location.origin,
-        },
-        redirect: "if_required",
+      // If no order exists yet, create it first
+      let orderId = currentOrderId;
+      if (!orderId && onCreateOrder) {
+        orderId = await onCreateOrder();
+        if (!orderId) {
+          setError("Failed to create order. Please try again.");
+          setIsProcessing(false);
+          return;
+        }
+        setCurrentOrderId(orderId);
+      }
+
+      if (!orderId) {
+        setError("Order ID is missing. Please try again.");
+        setIsProcessing(false);
+        return;
+      }
+
+      // Create payment intent on the backend
+      const result = await createPaymentIntent({
+        amount,
+        customerEmail,
+        customerName,
+        orderId,
       });
+
+      if (!result?.clientSecret) {
+        setError("Failed to initialize payment. Please try again.");
+        setIsProcessing(false);
+        return;
+      }
+
+      const { clientSecret, paymentIntentId } = result;
+
+      // Confirm payment with Stripe
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: customerName,
+              email: customerEmail,
+            },
+          },
+        });
 
       if (stripeError) {
         setError(stripeError.message || "Payment failed. Please try again.");
-      } else if (paymentIntent && currentOrderId) {
-        // Payment succeeded, confirm on backend
+      } else if (paymentIntent?.status === "succeeded") {
+        // Confirm payment on backend to trigger order update and email
         await confirmPayment({
-          paymentIntentId: paymentIntent.id,
-          orderId: currentOrderId,
+          paymentIntentId: paymentIntentId,
+          orderId: orderId,
         });
 
         setSuccess(true);
@@ -137,11 +186,32 @@ function CheckoutForm({
       </h4>
 
       <PaymentForm onSubmit={handleSubmit}>
-        <PaymentElement
-          options={{
-            layout: "tabs",
-          }}
-        />
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontWeight: "bold",
+            }}
+          >
+            Card Information
+          </label>
+          <CardElementContainer>
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "16px",
+                    color: "#424770",
+                    "::placeholder": {
+                      color: "#aab7c4",
+                    },
+                  },
+                },
+              }}
+            />
+          </CardElementContainer>
+        </div>
 
         <PayButton type="submit" disabled={!stripe || isProcessing}>
           {isProcessing ? "Processing..." : `Pay $${amount.toFixed(2)}`}
@@ -153,41 +223,10 @@ function CheckoutForm({
   );
 }
 
-function StripeCheckoutWrapper(props: StripeCheckoutProps) {
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const createPaymentIntent = useAction(api.payments.createPaymentIntent);
-
-  useEffect(() => {
-    const initializePayment = async () => {
-      // Create order if needed
-      let orderId = props.orderId;
-      if (!orderId && props.onCreateOrder) {
-        orderId = await props.onCreateOrder();
-      }
-
-      if (orderId) {
-        const { clientSecret: secret } = await createPaymentIntent({
-          amount: props.amount,
-          customerEmail: props.customerEmail,
-          customerName: props.customerName,
-          orderId,
-        });
-        setClientSecret(secret);
-      }
-    };
-
-    initializePayment();
-  }, [props.orderId, props.amount]);
-
-  if (!clientSecret) {
-    return <div style={{ padding: "1rem" }}>Loading payment options...</div>;
-  }
-
+export default function StripeCheckout(props: StripeCheckoutProps) {
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
+    <Elements stripe={stripePromise}>
       <CheckoutForm {...props} />
     </Elements>
   );
 }
-
-export default StripeCheckoutWrapper;

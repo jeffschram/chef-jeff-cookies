@@ -62,7 +62,11 @@ const CartButton = styled.button`
 `;
 
 const AdminButton = styled.a`
+  font-size: 0.85rem;
   color: var(--text-1);
+  display: block;
+  width: 100%;
+  text-align: left;
   
 `;
 
@@ -552,7 +556,7 @@ const PaymentLogos = styled.div`
 
 const FooterText = styled.p`
   color: var(--text-dark);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 `;
 
 const WarningMessage = styled.div`
@@ -983,6 +987,9 @@ export default function App() {
               <FooterText>
                 Licensed Cottage Food Provider in Connecticut.
               </FooterText>
+              <AdminButton onClick={() => setCurrentView("admin")}>
+                ©2025 Schram Industries
+              </AdminButton>
             </FooterLeft>
             
             <FooterRight>
@@ -990,23 +997,11 @@ export default function App() {
                 <FooterText style={{ fontSize: "0.85rem" }}>
                   Payments processed securely by Stripe
                 </FooterText>
-                <PaymentLogos>
-                  
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/250px-Visa_Inc._logo.svg.png" alt="Visa" width="48" />
-
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width="48" />
-
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" width="48" />
-
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" width="48" />
+                <PaymentLogos>                  
+<img src="https://images.stripeassets.com/fzn2n1nzq965/4M6d6BSWzlgsrJx8rdZb0I/733f37ef69b5ca1d3d33e127184f4ce4/Powered_by_Stripe.svg?q=80&w=1082" alt="Stripe" width="128" />
                 </PaymentLogos>
               </PaymentInfo>
-              <AdminButton onClick={() => setCurrentView("admin")}>
-                ©2025 Schram Industries
-              </AdminButton>
+              
             </FooterRight>
           </FooterContent>
         </div>
