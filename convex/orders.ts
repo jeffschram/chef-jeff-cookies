@@ -81,7 +81,7 @@ export const sendOrderEmails = internalAction({
 
     const emailHtml = `
       <div style="font-family:Arial, Helvetica, sans-serif;max-width:600px;margin:40px auto 0 auto;padding:20px;background:#fbdd56;">
-        <img src="/images/logo.png" alt="Chef Jeff Cookies Logo" style="width: 150px;position: relative; top: -40px; left: -40px; margin-bottom: -40px;" />
+        <img src="https://chefjeffcookies.com/images/logo.png" alt="Chef Jeff Cookies Logo" style="width: 150px;position: relative; top: -40px; left: -40px; margin-bottom: -40px;" />
         <h2 style="color:#000000; font-weight: bold; padding: 5px; background: #ffffff; width: max-content;">ORDER CONFIRMATION</h2>        
         
         <div style="background-color:#ffffff;padding:20px;margin:20px 0">
