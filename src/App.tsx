@@ -1254,7 +1254,7 @@ export default function App() {
                             />
                             <RadioLabel>Local Delivery (+$10)</RadioLabel>
                             <RadioHint>
-                              Sunday Deliveries
+                              Delivered on Sunday Dec. 21st
                               <br /> within 5 miles of Stamford, CT
                             </RadioHint>
                           </RadioOption>
