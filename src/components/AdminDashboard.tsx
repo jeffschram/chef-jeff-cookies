@@ -505,7 +505,7 @@ export default function AdminDashboard({ onBackToStore }: AdminDashboardProps) {
           </div>
           <p>Order Management & Weekly Reports</p>
           <TestModeToggle>
-            <span>Test Mode ($0.15 pricing):</span>
+            <span>Test Mode ($0.10 pricing):</span>
             <ToggleSwitch>
               <ToggleInput
                 type="checkbox"
