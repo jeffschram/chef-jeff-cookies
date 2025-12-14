@@ -973,7 +973,7 @@ export default function App() {
 
       <FinePrint>
         <div className="container">
-          <p>* Yes, there was a world-wide international competition where chefs and bakers from accross the globe presented their chocolate chip cookies to an illustrious panel of compentent judges and they unamimously declared Chef Jeff's Cookies to be the best in the world. **</p>
+          <p>* Yes, there was a worldwide international competition where chefs and bakers from across the globe presented their chocolate chip cookies to an illustrious panel of competent judges and they unanimously declared Chef Jeff's Cookies to be the best in the world. **</p>
           <p>** OK maybe that didn't happen, but these are really good cookies.</p>
         </div>
       </FinePrint>
