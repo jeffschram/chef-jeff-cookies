@@ -24,6 +24,7 @@ export const createOrder = mutation({
     deliveryType: v.union(v.literal("pickup"), v.literal("delivery")),
     deliveryAddress: v.optional(v.string()),
     totalAmount: v.number(),
+    isTestOrder: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const orderDate = new Date().toISOString().split("T")[0];
@@ -75,40 +76,34 @@ export const sendOrderEmails = internalAction({
 
     const deliveryInfo =
       args.deliveryType === "delivery"
-        ? `<p><strong>Delivery Address:</strong> ${args.deliveryAddress}</p>`
-        : "<p><strong>Pickup:</strong> Saturday pickup available</p>";
+        ? `<p><strong>Delivery Address:</strong> ${args.deliveryAddress}</p><p>Will be delivered on Sunday Dec. 21st</p>`
+        : "<p><strong>Pickup:</strong> Saturday Dec. 20th from 12pm - 4pm at the <a href='https://www.google.com/maps/place/Danger+Gallery/@41.0754056,-73.5212585,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2a1add5015f11:0xc93c1e07e6b83389!8m2!3d41.0754056!4d-73.5186782!16s%2Fg%2F11c5fzl55c?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D'>Danger Gallery in Stamford, CT</a>.</p>";
 
     const emailHtml = `
-      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #8B4513; text-align: center;">Chef Jeff Cookies</h1>
-        <h2 style="color: #D2691E;">Order Confirmation</h2>
+      <div style="font-family:Arial, Helvetica, sans-serif;max-width:600px;margin:40px auto 0 auto;padding:20px;background:#fbdd56;">
+        <img src="/images/logo.png" alt="Chef Jeff Cookies Logo" style="width: 150px;position: relative; top: -40px; left: -40px; margin-bottom: -40px;" />
+        <h2 style="color:#000000; font-weight: bold; padding: 5px; background: #ffffff; width: max-content;">ORDER CONFIRMATION</h2>        
         
-        <p>Dear ${args.customerName},</p>
+        <div style="background-color:#ffffff;padding:20px;margin:20px 0">
+          <p><b>Dear ${args.customerName},</b></p>
+          <p>Thank you for your order! We've received your cookie order and will begin preparing your delicious treats.</p>
+        </div>
         
-        <p>Thank you for your order! We've received your cookie order and will begin preparing your delicious treats.</p>
-        
-        <div style="background-color: #FFF8DC; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #8B4513; margin-top: 0;">Order Details</h3>
+        <div style="background-color:#ffffff;padding:20px;margin:20px 0">
+          <h3 style="color: #000000; margin-top: 0;">ORDER DETAILS</h3>
           <p><strong>Order ID:</strong> ${args.orderId}</p>
           <ul style="margin: 10px 0;">
             ${itemsList}
           </ul>
           <p><strong>Total:</strong> $${args.totalAmount.toFixed(2)}</p>
           ${deliveryInfo}
-        </div>
         
-        <div style="background-color: #F4A460; padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #2C1810; margin-top: 0;">Important Information</h3>
-          <p><strong>Baking Schedule:</strong> Cookies are baked fresh every Friday</p>
-          <p><strong>Pickup/Delivery:</strong> Available on Saturdays</p>
-          <p>We'll contact you soon with specific pickup/delivery details!</p>
-        </div>
+        <p style="margin-top: 20px;">Payments are processed through Stripe. You will also receive a confirmation email from them.</p>
+        <p>If you have any questions, please don't hesitate to reach out to Chef Jeff at <a href="mailto:schramindustries@gmail.com">schramindustries@gmail.com</a></p>
         
-        <p>If you have any questions, please don't hesitate to reach out.</p>
-        
-        <p style="margin-top: 30px;">
-          Best regards,<br>
-          <strong>Chef Jeff Cookies Team</strong>
+        <p style="margin-top: 20px;">
+          Thanks again and enjoy!,<br>
+          <strong>- Chef Jeff and the team</strong>
         </p>
       </div>
     `;
@@ -124,7 +119,7 @@ export const sendOrderEmails = internalAction({
         // Use your verified domain email address as the sender
         from: "Chef Jeff Cookies <noreply@chefjeffcookies.com>",
         to: args.customerEmail,
-        subject: `Order Confirmation - Chef Jeff Cookies (#${args.orderId})`,
+        subject: `Order Confirmation - Chef Jeff Cookies!`,
         html: emailHtml,
       });
 
@@ -189,14 +184,29 @@ export const updateOrderStatusInternal = internalMutation({
   },
 });
 
+export const getRealOrders = query({
+  args: {},
+  handler: async (ctx) => {
+    const orders = await ctx.db.query("orders").order("desc").collect();
+    // Filter out test orders
+    return orders.filter(order => !order.isTestOrder);
+  },
+});
+
+export const getTestOrders = query({
+  args: {},
+  handler: async (ctx) => {
+    const orders = await ctx.db.query("orders").order("desc").collect();
+    // Only return test orders
+    return orders.filter(order => order.isTestOrder === true);
+  },
+});
+
+// Keep getOrders for backward compatibility (returns all orders)
 export const getOrders = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
-      .query("orders")
-      .filter((q) => q.eq(q.field("status"), "completed"))
-      .order("desc")
-      .collect();
+    return await ctx.db.query("orders").order("desc").collect();
   },
 });
 

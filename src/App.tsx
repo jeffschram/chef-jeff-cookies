@@ -713,7 +713,12 @@ export default function App() {
 
   // Apply test pricing if enabled
   const getProductPrice = (basePrice: number) => {
-    return testPricing ? 0.15 : basePrice;
+    return testPricing ? 0.10 : basePrice;
+  };
+
+  // Get delivery fee based on test mode
+  const getDeliveryFee = () => {
+    return testPricing ? 0.10 : 10.00;
   };
 
   // Get current day of week (0 = Sunday, 1 = Monday, etc.)
@@ -804,7 +809,7 @@ export default function App() {
       (total, item) => total + item.price * item.quantity,
       0
     );
-    const deliveryFee = orderForm.deliveryType === "delivery" ? 10 : 0;
+    const deliveryFee = orderForm.deliveryType === "delivery" ? getDeliveryFee() : 0;
     return subtotal + deliveryFee;
   };
 
@@ -828,6 +833,7 @@ export default function App() {
             ? orderForm.deliveryAddress
             : undefined,
         totalAmount: getTotalPrice(),
+        isTestOrder: testPricing || false,
       });
 
       setCurrentOrderId(orderId);
