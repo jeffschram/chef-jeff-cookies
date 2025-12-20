@@ -86,24 +86,24 @@ export const sendOrderEmails = internalAction({
         
         <div style="background-color:#ffffff;padding:20px;margin:20px 0">
           <p><b>Dear ${args.customerName},</b></p>
-          <p>Thank you for your order! We've received your cookie order and will begin preparing your delicious treats.</p>
+          <p>Thank you for your order! We're just a little micro-bakery who happened to create the world's best cookies and we want to spread joy and smiles to as many people as possible. Your order helps us do that so THANK YOU!</p>
         </div>
         
         <div style="background-color:#ffffff;padding:20px;margin:20px 0">
           <h3 style="color: #000000; margin-top: 0;">ORDER DETAILS</h3>
           <p><strong>Order ID:</strong> ${args.orderId}</p>
-          <ul style="margin: 10px 0;">
+          <ul style="margin: 10px 0 20px; font-weight: bold; padding: 0;">
             ${itemsList}
           </ul>
           <p><strong>Total:</strong> $${args.totalAmount.toFixed(2)}</p>
           ${deliveryInfo}
         
-        <p style="margin-top: 20px;">Payments are processed through Stripe. You will also receive a confirmation email from them.</p>
-        <p>If you have any questions, please don't hesitate to reach out to Chef Jeff at <a href="mailto:schramindustries@gmail.com">schramindustries@gmail.com</a></p>
+        <p style="margin-top: 20px;">Payments are processed through Stripe. You will also receive a Stripe receipt email from Schram Industries.</p>
+        <p>If you have any questions, please don't hesitate to reach out to Chef Jeff at <a href="mailto:jeff@chefjeffcookies.com">jeff@chefjeffcookies.com</a></p>
         
         <p style="margin-top: 20px;">
           Thanks again and enjoy!,<br>
-          <strong>- Chef Jeff and the team</strong>
+          <strong>- Chef Jeff and the Cookie Team</strong>
         </p>
       </div>
     `;
@@ -116,8 +116,7 @@ export const sendOrderEmails = internalAction({
       );
 
       const { data, error } = await resend.emails.send({
-        // Use your verified domain email address as the sender
-        from: "Chef Jeff Cookies <noreply@chefjeffcookies.com>",
+        from: "Chef Jeff Cookies <orders@chefjeffcookies.com>",
         to: args.customerEmail,
         subject: `Order Confirmation - Chef Jeff Cookies!`,
         html: emailHtml,
