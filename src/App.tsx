@@ -914,7 +914,7 @@ export default function App() {
             </HeroTitle>            
             <HeroSubtitle>
               <span className="text--highlighted">
-                Catch the Holiday Cookie Drop! Order now to pick up on Saturday, December 20th.
+                Thanks for making the first cookie drop a success! Stay tuned!
               </span>
             </HeroSubtitle>
           </HeroMain>
@@ -924,9 +924,9 @@ export default function App() {
         </HeroContainer>
       </Hero>
       </div>
-
+{/* 
       <ProductsSection className="theme--b">     
-        {/* <SectionTitle>Our Cookie Packages</SectionTitle> */}
+        <SectionTitle>Our Cookie Packages</SectionTitle>
         {products
           .filter((product) => product.available)
           .map((product) => {
@@ -969,7 +969,7 @@ export default function App() {
             </FeatureMedia>
           </FeatureContent>
         </div>
-      </Feature>
+      </Feature> */}
 
       <FinePrint>
         <div className="container">
@@ -986,8 +986,8 @@ export default function App() {
                 <strong>Chef Jeff Cookies</strong> is a division of Schram Industries.
               </FooterText>
               <FooterText>
-                <a href="mailto:schramindustries@gmail.com" className="map-link" style={{ color: "inherit" }}>
-                  schramindustries@gmail.com
+                <a href="mailto:info@chefjeffcookies.com" className="map-link" style={{ color: "inherit" }}>
+                  info@chefjeffcookies.com
                 </a>
               </FooterText>
               <FooterText>

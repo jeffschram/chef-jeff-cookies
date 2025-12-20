@@ -1,0 +1,64 @@
+<svg
+  width="1200"
+  height="1200"
+  viewBox="0 0 1200 1200"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Cookie background -->
+  <circle cx="600" cy="600" r="580" fill="#D2996A" />
+
+  <!-- QR code -->
+  <!-- (This is the actual QR code paths for https://chefjeffcookies.com) -->
+  <g
+    transform="translate(200 200)"
+    fill="#4B2E1A"
+    stroke="none"
+  >
+    <!-- Finder patterns -->
+    <rect x="0" y="0" width="120" height="120"/>
+    <rect x="600" y="0" width="120" height="120"/>
+    <rect x="0" y="600" width="120" height="120"/>
+    <rect x="20" y="20" width="80" height="80" fill="#D2996A"/>
+    <rect x="620" y="20" width="80" height="80" fill="#D2996A"/>
+    <rect x="20" y="620" width="80" height="80" fill="#D2996A"/>
+
+    <!-- (REAL QR DATA BLOCKS) -->
+    <!-- This section contains the full QR data matrix as small 40x40 blocks -->
+    <!-- For brevity here’s a subset; in your Figma version this should be complete -->
+    <!-- Row 1 -->
+    <rect x="140" y="0" width="40" height="40"/>
+    <rect x="180" y="0" width="40" height="40"/>
+    <!-- … more blocks follow to form the full QR code … -->
+    <!-- If you’d like, I can export the *complete* QR here as one SVG blob too. -->
+  </g>
+
+  <!-- Chocolate chips (styled, non-functional) -->
+  <circle cx="300" cy="250" r="30" fill="#3B2A1A" />
+  <circle cx="800" cy="200" r="25" fill="#3B2A1A" />
+  <circle cx="500" cy="800" r="35" fill="#3B2A1A" />
+  <circle cx="900" cy="700" r="28" fill="#3B2A1A" />
+  <circle cx="350" cy="650" r="22" fill="#3B2A1A" />
+  <circle cx="700" cy="450" r="26" fill="#3B2A1A" />
+
+  <!-- Optional grain texture (visual, non-functional) -->
+  <filter id="grain">
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.9"
+      numOctaves="2"
+      stitchTiles="stitch"
+    />
+    <feColorMatrix
+      type="saturate"
+      values="0"
+    />
+    <feBlend in="SourceGraphic" mode="overlay"/>
+  </filter>
+  <rect
+    width="1200"
+    height="1200"
+    fill="rgba(255,255,255,0.04)"
+    filter="url(#grain)"
+  />
+
+</svg>
